@@ -1,0 +1,25 @@
+.lobby-page {
+    display: flex;
+    flex-direction: column;
+    width: 1280px;
+
+    .lobby-game {
+        position: absolute;
+        top: 50%;
+        left: 1;
+        transform: translateY(-50%);
+    }
+
+    .btn_logout {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 40px;
+    }
+    .chat {
+        position: absolute;
+        top:50%;
+        right: 0;
+        transform: translateY(-50%);
+    }
+}

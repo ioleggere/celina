@@ -1,0 +1,47 @@
+// .lobby{
+//     display: flex;
+//     flex-direction: column;
+//     scale: 4;
+//     border: 2px solid black;
+//     background-color: aqua;
+// }
+
+// .cel-outside{
+//     width: 130px;
+// }
+
+// .player {
+//     width: 50px; 
+//     height: 50px;
+// }
+
+
+.lobby {
+    display: flex;
+    flex-direction: column;
+    scale: 4;
+    border: 2px solid black;
+    background-color: aqua;
+    position: relative;
+}
+
+.cel-outside {
+    width: 130px;
+}
+
+.floor {
+    position: relative;
+}
+
+.floor-image {
+
+}
+
+.player-flipped {
+    transform: scaleX(-1); 
+}
+
+.player {
+    width: 50px; 
+    height: 50px; 
+}

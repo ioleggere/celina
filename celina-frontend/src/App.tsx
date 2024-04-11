@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from './contexts/Auth/AuthContext';
 import Login from './pages/Login';
 import { RequireAuth } from './contexts/Auth/RequireAuth';
-import Lobby from './pages/Lobby';
+import LobbyRoom from './pages/Lobby';
 
 function App() {
   const { user, validateToken } = useContext(AuthContext);
@@ -40,7 +40,7 @@ function App() {
         }
         />
         <Route path="/Login" element={<Login />} />
-        <Route path="/Lobby" element={<RequireAuth><Lobby /></RequireAuth>} />
+        <Route path="/Lobby" element={<RequireAuth><LobbyRoom /></RequireAuth>} />
       </Routes>
     </>
   )

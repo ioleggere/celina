@@ -1,0 +1,42 @@
+FRONT:
+*Lobby
+-adicionar username em cima do player
+-adicionar goleta de manel
+-modelar o chat
+-adicionar mouse hover no goleta de manel e na sala de celina
+-adicionar usenavigate quando clicar na sala de 
+
+*Sala de celina
+-criar o componente
+-adicionar hover em celina e caixa de texto (MENEEEENO)
+-ao clicar em celina, navigate para tela de jogatina (ir para criar level, jogar level)
+-ao clicar na porta volta para o lobby
+
+*Tela de jogatina 
+-(ir para criar level, jogar level, sala de celina)
+
+*Tela criar level
+-componente builder de level
+-ao clicar em concluir vai para a tela de jogatina (so pode upar o nivel se conclui-lo)
+-ao conlcuir vai para uma tela onde sobe no banco de dados um array correspondente ao nivel criado (valor 0, 1, 2... correspondente ao tile)
+-ao clicar em sair volta para sala de celina
+
+*Tela de jogar level
+-componente de lista de niveis
+-ao clicar em sair volta para tela de jogatina 
+
+*Tela de labirinto
+-Componente que carrega o tile de acordo com o array
+-componente com o blockly api que move o player no labirinto de acordo com o comando (so pode se mover se a direcao for um tile=1 [1=chao])
+-botao de rodar converte o comando blockly para movimentacao do tile do player no labirinto e realiza a animacao
+-se concluir registra o codigo no banco de dados
+-se nao concluir clica em tentar denovo e reseta a pagina
+
+BACK:
+-Banco de dados com dados do usuario, dados dos niveis
+-rota para cadastrar player
+-rota para logar player
+-rota para pegar posicao de players online em tempo real
+-rota para cadastrar nivel
+-rota para pegar todos os niveis cadastrados (e seus dados como taxa de conclusao e etc)
+-rota para adicionar algoritmo concluido do nivel no mesmo
