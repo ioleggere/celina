@@ -1,10 +1,10 @@
 FRONT:
 *Lobby
--adicionar username em cima do player
--adicionar goleta de manel
+-adicionar username em cima do player*
+-adicionar goleta de manel*
 -modelar o chat
--adicionar mouse hover no goleta de manel e na sala de celina
--adicionar usenavigate quando clicar na sala de 
+-adicionar mouse hover no goleta de manel* e na sala de celina
+-adicionar usenavigate quando clicar na sala de celina
 
 *Sala de celina
 -criar o componente

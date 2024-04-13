@@ -1,0 +1,15 @@
+.player-flipped {
+    transform: scaleX(-1); 
+}
+
+.player {
+    width: 15px; 
+    height: 15px; 
+}
+
+.player-username {
+    font-family: Arial, sans-serif;
+    -webkit-text-stroke: 0.4px black;
+    padding: 3px; 
+    font-size: 10px;
+}
