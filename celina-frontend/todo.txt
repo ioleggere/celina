@@ -3,12 +3,12 @@ FRONT:
 -adicionar username em cima do player*
 -adicionar goleta de manel*
 -modelar o chat
--adicionar mouse hover no goleta de manel* e na sala de celina
--adicionar usenavigate quando clicar na sala de celina
+-adicionar mouse hover no goleta de manel* e na sala de celina*
+-adicionar usenavigate quando clicar na sala de celina*
 
 *Sala de celina
--criar o componente
--adicionar hover em celina e caixa de texto (MENEEEENO)
+-criar o componente*
+-adicionar hover em celina e caixa de texto (MENEEEENO)*
 -ao clicar em celina, navigate para tela de jogatina (ir para criar level, jogar level)
 -ao clicar na porta volta para o lobby
 
@@ -33,9 +33,9 @@ FRONT:
 -se nao concluir clica em tentar denovo e reseta a pagina
 
 BACK:
--Banco de dados com dados do usuario, dados dos niveis
--rota para cadastrar player
--rota para logar player
+-Banco de dados com dados do usuario*, dados dos niveis
+-rota para cadastrar player*
+-rota para logar player*
 -rota para pegar posicao de players online em tempo real
 -rota para cadastrar nivel
 -rota para pegar todos os niveis cadastrados (e seus dados como taxa de conclusao e etc)

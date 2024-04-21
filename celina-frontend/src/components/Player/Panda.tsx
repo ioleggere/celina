@@ -42,7 +42,7 @@ const Panda: React.FC<PandaProps> = ({ xsize, ysize, canMove }) => {
                         break;
                 }
 
-                if (newX >= -16 && newX <= (xsize - 30) && newY >= 0 && newY <= (ysize - 10)) {
+                if (newX >= -6 && newX <= (xsize) && newY >= -27 && newY <= (ysize)) {
                     setPlayerPosition({ x: newX, y: newY });
                 }
             } else {
@@ -64,10 +64,10 @@ const Panda: React.FC<PandaProps> = ({ xsize, ysize, canMove }) => {
     return (
         <div>
             <div    
-                style={{ display: 'flex', flexDirection: 'column', position: 'absolute', top: playerPosition.y, left: playerPosition.x }}
+                style={{ zIndex: 1, display: 'flex', flexDirection: 'column', position: 'absolute', top: playerPosition.y, left: playerPosition.x }}
             >
                 <span className="player-username">{auth.user?.username}</span>
-                <img src="panda.png" className={`player ${playerDirection === 'left' ? 'player-flipped' : ''}`} alt="player" />
+                <img src="panda_gif.gif" className={`player ${playerDirection === 'left' ? 'player-flipped' : ''}`} alt="player" />
             </div>
         </div>
 

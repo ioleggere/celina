@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  celina_backend:
+    container_name: celina_back
+    image: ioleggere/celina_backend:1.0.0
+    build: .
+    ports:
+      - "4000:4000"
+    environment:
+      - DB_URL=postgresql://postgres:postgres@celina_backend_db:5432/postgres
+    depends_on:
+      - celina_backend_db
+  celina_backend_db:
+    container_name: celina_backend_db
+    image: postgres:12
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata: {}

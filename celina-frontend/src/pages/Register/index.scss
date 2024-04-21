@@ -1,0 +1,79 @@
+body {
+    background-color: gray;
+}
+
+.page-login{
+    width: 600px;
+    height: 800px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0rem;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.header{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.logocelina{
+    width: 200px;
+}
+
+.celina{
+    width: 90px;
+}
+
+.login-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    //border: 2px solid #000000;
+}
+
+.login-input-group{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 12px;
+    
+    .login-input{
+        background-color: #B0B0B0;
+        border: 1px solid #000000;
+        box-shadow: 5px 10px 5px rgba(0, 0, 0, 0.3);
+        border-radius: 63px;
+        width: 321px;
+        height: 25px;
+    }
+}
+
+.login-actions {
+    padding-top: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    .login-button {
+        width: 152px;
+        height: 44px;
+        background-color: #99A6A0;
+        border-radius: 63px;
+    }
+    .register-button{
+        width: 152px;
+        height: 44px;
+        background-color: #4E4E4E;
+        border-radius: 63px;
+    }
+}
+

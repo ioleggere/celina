@@ -5,13 +5,11 @@ import { AuthContext } from '../../contexts/Auth/AuthContext';
 interface LoginState {
     username: string;
     password: string;
-    usertoken: string;
 }
 
 const initialLoginState: LoginState = {
     username: "",
-    password: "",
-    usertoken: ""
+    password: ""
 }
 
 function Login() {
@@ -26,41 +24,25 @@ function Login() {
         setLoginState((prevState) => ({ ...prevState, password }));
     };
 
-    const setuserToken = (usertoken: string) => {
-        setLoginState((prevState) => ({ ...prevState, usertoken }));
-    };
 
     const performLogin = async () => {
-        if (!loginState.usertoken) {
-            if (!loginState.username || !loginState.password) {
-                setLoginState((prevState) => ({ ...prevState, errorLogin: true, messageErrorLogin: "Fill in all fields" }));
-                return;
-            }
+        if (!loginState.username || !loginState.password) {
+            setLoginState((prevState) => ({ ...prevState, errorLogin: true, messageErrorLogin: "Fill in all fields" }));
+            return;
         }
 
-        if (loginState.usertoken) {
-            try {
-                const isLogged = await auth.signintoken(loginState.usertoken);
-                if (isLogged) {
-                    navigate('/Lobby');
-                } else {
-                    throw new Error("Authentication failed");
-                }
-            } catch (error) {
-                alert("Authentication failed. Please try again. Error: " + error);
+
+        try {
+            const isLogged = await auth.signin(loginState.username, loginState.password);
+            if (isLogged) {
+                navigate('/Lobby');
+            } else {
+                throw new Error("Authentication failed");
             }
-        } else {
-            try {
-                const isLogged = await auth.signin(loginState.username, loginState.password);
-                if (isLogged) {
-                    navigate('/Lobby');
-                } else {
-                    throw new Error("Authentication failed");
-                }
-            } catch (error) {
-                alert("Authentication failed. Please try again. Error: " + error);
-            }
+        } catch (error) {
+            alert("Authentication failed. Please try again. Error: " + error);
         }
+
 
 
     };
@@ -95,17 +77,6 @@ function Login() {
                             id="password"
                             value={loginState.password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="login-input"
-                        />
-                    </div>
-                    <>Ou</>
-                    <div className="login-input-group">
-                        <label htmlFor="text">Token access</label>
-                        <input
-                            type="text"
-                            id="token"
-                            value={loginState.usertoken}
-                            onChange={(e) => setuserToken(e.target.value)}
                             className="login-input"
                         />
                     </div>

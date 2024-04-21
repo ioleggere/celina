@@ -27,12 +27,17 @@
 
 .cel-outside {
     width: 130px;
+    transition: 0.6s;
+    z-index: 1;
 }
 
 .floor {
     position: relative;
 }
 
+.cel-outside:hover{
+    scale: 1.05;
+}
 .goleta {
     position: absolute;
     width: 20px;

@@ -13,10 +13,12 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
         const localData = localStorage.getItem('authToken');
         if (localData) {
             const data = await api.validateToken(localData);
+            console.log("vitin", data.logged_in_as.email)
             const user = {
-                username: data.user.username,
-                email: data.user.email,
-                password: ""
+                username: data.logged_in_as.username,
+                email: data.logged_in_as.email,
+                password: "",
+                name: ""
             }
             setUser(user)
         }
@@ -25,24 +27,8 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
         try {
             const data = await api.signin(username, password);
             if (data) {
-                setToken(data.access_token)
-                console.log(data)
-                await validateToken();
-                return true;
-            }
-            return false;
-        } catch (error) {
-            console.error('Error when logging in:', error);
-            return false;
-        }
-    }
-
-    const signintoken = async (token: string) => {
-        try {
-            const data = await api.signintoken(token);
-            if (data) {
-                setToken(data.token)
-                console.log(data)
+                
+                setToken(data)
                 await validateToken();
                 return true;
             }
@@ -64,7 +50,6 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
         try {
             const data = await api.register(user);
             if (data) {
-                console.log(data);
                 return true;
             }
             return false;
@@ -78,7 +63,7 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ user, signin, signintoken, signout, validateToken, register }}>
+        <AuthContext.Provider value={{ user, signin, signout, validateToken, register }}>
             {children}
         </AuthContext.Provider>
     )
