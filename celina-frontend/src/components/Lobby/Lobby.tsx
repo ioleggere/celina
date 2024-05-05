@@ -27,19 +27,22 @@ const Lobby: React.FC<LobbyProps> = ({ isFocused }) => {
                     className="floor-image"
                     style={{ position: 'relative', top: 0, left: 0 }}
                 />
-                <Panda xsize={198} ysize={113} canMove={isFocused} />
-            </div>
-            <img src="goleta.png" alt="goleta" className="goleta" id="goleta-img" onClick={togglePopup} />
-            {showPopup && (
+                <Panda xsize={188} ysize={90} canMove={isFocused} />
+                {showPopup && (
                 <div className="popup">
                     <div className="popup-content">
                         <p className="popup-text">
                             Este é o lendario "Goleta de Manel", fez história enquanto esteve em suas mãos!
+                            
                         </p>
                         <button className="popup-btn" onClick={togglePopup}>Fechar</button>
                     </div>
+                    
                 </div>
             )}
+            </div>
+            <img src="goleta.png" alt="goleta" className="goleta" id="goleta-img" onClick={togglePopup} />
+            
         </div>
 
     )

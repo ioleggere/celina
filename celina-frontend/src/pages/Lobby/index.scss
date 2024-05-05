@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     width: 1280px;
-
+    scale: 0.9;
     .lobby-game {
         position: absolute;
         top: 50%;
@@ -12,7 +12,7 @@
 
     .btn_logout {
         position: absolute;
-        top: 0;
+        top: 460px;
         right: 0;
         height: 40px;
     }

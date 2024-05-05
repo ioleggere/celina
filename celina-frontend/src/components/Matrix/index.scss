@@ -1,0 +1,15 @@
+.linha {
+    display: flex;
+}
+
+.celula {
+    border: 1px solid #ccc;
+    text-align: center;
+    height: 30px;
+    margin: 0; /* Removendo margem */
+    padding: 0; /* Removendo preenchimento */
+}
+
+.grid{
+    height: 30px;
+}

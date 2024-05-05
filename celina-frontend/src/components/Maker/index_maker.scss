@@ -1,0 +1,50 @@
+.lobby {
+  display: flex;
+  flex-direction: column;
+  scale: 4;
+  border: 2px solid black;
+  background-color: gray;
+  position: relative;
+  height: 200px;
+  width: 200px;
+  .leave-btn{
+      font-size: 5px; /* Tamanho da fonte menor */
+      width: 30px;
+      position: relative;
+  }
+  .zm-btn{
+    font-size: 3px; /* Tamanho da fonte menor */
+    width: 30px;
+    position: relative;
+}
+  
+}
+
+.matrix-container {
+  width: 200px; /* Largura máxima da matrix */
+  height: 200px; /* Altura máxima da matrix */
+  overflow: auto; /* Adiciona barras de rolagem quando necessário */
+}
+
+.matrix {
+  scale: 1;
+
+  width: 270px;
+  height: fit-content; 
+}
+
+.image-editor {
+  display: flex; 
+  align-items: center; 
+  gap: 2rem;
+}
+
+.actual-image{
+  border: 2px solid red;
+  width: 20px;
+  height: 20px;
+}
+
+.sliderzoom{
+  scale: 0.4;
+}

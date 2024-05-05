@@ -9,17 +9,17 @@ FRONT:
 *Sala de celina
 -criar o componente*
 -adicionar hover em celina e caixa de texto (MENEEEENO)*
--ao clicar em celina, navigate para tela de jogatina (ir para criar level, jogar level)
+-ao clicar em celina, navigate para tela de jogatina (ir para criar level, jogar level)*
 -ao clicar na porta volta para o lobby
 
 *Tela de jogatina 
--(ir para criar level, jogar level, sala de celina)
+-(ir para criar level, jogar level, sala de celina)*
 
 *Tela criar level
--componente builder de level
+-componente builder de level*
 -ao clicar em concluir vai para a tela de jogatina (so pode upar o nivel se conclui-lo)
 -ao conlcuir vai para uma tela onde sobe no banco de dados um array correspondente ao nivel criado (valor 0, 1, 2... correspondente ao tile)
--ao clicar em sair volta para sala de celina
+-ao clicar em sair volta para sala de celina*
 
 *Tela de jogar level
 -componente de lista de niveis

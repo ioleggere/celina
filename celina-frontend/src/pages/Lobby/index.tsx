@@ -19,16 +19,16 @@ function LobbyRoom() {
 
     return (
         <div className="lobby-page">
-            <div className="btn_logout">
-                <button onClick={handleLogout} >Logout</button>
-            </div>
+            
             <div className="lobby-game">
                 <Lobby isFocused={!sceneOutFocus}  />
             </div>
             <div className="chat" onFocus={handleFocus} onBlur={handledesFocus}>
                 <Chat />
             </div>
-
+            <div className="btn_logout">
+                <button onClick={handleLogout} >Logout</button>
+            </div>
         </div>
 
     )

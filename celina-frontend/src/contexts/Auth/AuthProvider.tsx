@@ -13,7 +13,6 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
         const localData = localStorage.getItem('authToken');
         if (localData) {
             const data = await api.validateToken(localData);
-            console.log("vitin", data.logged_in_as.email)
             const user = {
                 username: data.logged_in_as.username,
                 email: data.logged_in_as.email,

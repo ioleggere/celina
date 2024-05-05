@@ -67,7 +67,10 @@ const Panda: React.FC<PandaProps> = ({ xsize, ysize, canMove }) => {
                 style={{ zIndex: 1, display: 'flex', flexDirection: 'column', position: 'absolute', top: playerPosition.y, left: playerPosition.x }}
             >
                 <span className="player-username">{auth.user?.username}</span>
-                <img src="panda_gif.gif" className={`player ${playerDirection === 'left' ? 'player-flipped' : ''}`} alt="player" />
+                <span className={`player ${playerDirection === 'left' ? 'player-flipped' : ''}`}>
+                    <img src="panda.png" className='player-container' alt="player" />
+                </span>
+                
             </div>
         </div>
 
