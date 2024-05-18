@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import './index.scss'
+import { AuthContext } from '../../contexts/Auth/AuthContext';
 const Chat: React.FC = () => {
   const [messages, setMessages] = useState<string[]>([]);
   const [input, setInput] = useState('');
 
   const handleMessageSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setMessages([...messages, input]);
+    setMessages([...messages, (auth.user?.username +": " + input)]);
     setInput('');
   };
-
+  const auth = useContext(AuthContext);
   return (
     <div className='chat'>
       <h1>CHAT</h1>

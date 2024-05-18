@@ -1,0 +1,25 @@
+.submit-page {
+    display: flex;
+    flex-direction: column;
+    width: 1280px;
+    scale: 0.9;
+    .submit-component {
+        position: absolute;
+        top: 50%;
+        left: 1;
+        transform: translateY(-50%);
+    }
+
+    .btn_logout {
+        position: absolute;
+        top: 0px;
+        right: 0;
+        height: 40px;
+    }
+    .chat {
+        position: absolute;
+        top:50%;
+        right: 0;
+        transform: translateY(-50%);
+    }
+}

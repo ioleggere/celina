@@ -48,9 +48,9 @@ const SalaCelina: React.FC<LobbyProps> = ({ isFocused }) => {
 
             </div>
             {showPopup && (
-                <div className="popup">
-                    <div className="popup-content">
-                        <p className="popup-text">
+                <div className="popup-celroom">
+                    <div className="popup-content-celroom">
+                        <p className="popup-text-celroom">
                             O que deseja?
 
                         </p>

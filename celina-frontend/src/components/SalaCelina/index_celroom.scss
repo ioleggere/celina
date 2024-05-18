@@ -36,10 +36,10 @@
     width: 60px;
 }
 
-.popup {
+.popup-celroom {
     z-index: 1;
     position: fixed;
-    top: 130px;
+    top: 110px;
     left: 5px;
     width: 200px;
     height: 40px;
@@ -48,7 +48,7 @@
     align-items: center;
     flex-direction: column;
     
-    .popup-content {
+    .popup-content-celroom {
         display: flex;
         flex-direction: column;
         background-color: rgba(0, 0, 0, 0.6);;
@@ -62,7 +62,7 @@
         justify-content: center;
     }
 
-    .popup-text {
+    .popup-text-celroom {
         font-family: Arial, sans-serif;
         -webkit-text-stroke: 0.4px black;
         font-size: 10px;

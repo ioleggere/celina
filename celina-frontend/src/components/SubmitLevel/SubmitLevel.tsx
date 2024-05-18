@@ -1,0 +1,880 @@
+import React, { useEffect, useState } from 'react';
+import './index_submiter.scss';
+import Matriz from '../Matrix/Matrix';
+import { useNavigate } from 'react-router-dom';
+import { Slider } from '@mui/material';
+import { BlocklyWorkspace } from 'react-blockly';
+import Blockly from 'blockly';
+import 'blockly/blocks';
+import 'blockly/javascript';
+import updateMatrixAsync from '../../hooks/updateMatrixAsync';
+import { javascriptGenerator } from 'blockly/javascript';
+interface SubmitProps {
+    matrixData: number[][];
+}
+
+const TOOL_BOX_CATEGORIES = `
+<xml xmlns="http://www.w3.org/1999/xhtml">
+  <category name="Logic" colour="#5C81A6">
+    <block type="controls_if"></block>
+    <block type="logic_compare"></block>
+    <block type="logic_operation"></block>
+    <block type="logic_negate"></block>
+    <block type="logic_boolean"></block>
+    <block type="logic_null"></block>
+    <block type="logic_ternary"></block>
+  </category>
+  <category name="Loops" colour="#5CA65C">
+    <block type="controls_repeat_ext">
+      <value name="TIMES">
+        <block type="math_number">
+          <field name="NUM">10</field>
+        </block>
+      </value>
+    </block>
+    <block type="controls_whileUntil"></block>
+    <block type="controls_for">
+      <field name="VAR">i</field>
+      <value name="FROM">
+        <block type="math_number">
+          <field name="NUM">1</field>
+        </block>
+      </value>
+      <value name="TO">
+        <block type="math_number">
+          <field name="NUM">10</field>
+        </block>
+      </value>
+      <value name="BY">
+        <block type="math_number">
+          <field name="NUM">1</field>
+        </block>
+      </value>
+    </block>
+    <block type="controls_forEach"></block>
+    <block type="controls_flow_statements"></block>
+  </category>
+  <category name="Math" colour="#5C68A6">
+    <block type="math_number"></block>
+    <block type="math_arithmetic"></block>
+    <block type="math_single"></block>
+    <block type="math_trig"></block>
+    <block type="math_constant"></block>
+    <block type="math_number_property"></block>
+    <block type="math_round"></block>
+    <block type="math_on_list"></block>
+    <block type="math_modulo"></block>
+    <block type="math_constrain"></block>
+    <block type="math_random_int"></block>
+    <block type="math_random_float"></block>
+  </category>
+  <category name="Text" colour="#5CA68D">
+    <block type="text"></block>
+    <block type="text_join"></block>
+    <block type="text_append">
+      <field name="VAR">item</field>
+    </block>
+    <block type="text_length"></block>
+    <block type="text_isEmpty"></block>
+    <block type="text_indexOf">
+      <field name="END">FIRST</field>
+    </block>
+    <block type="text_charAt">
+      <field name="WHERE">FROM_START</field>
+    </block>
+    <block type="text_getSubstring">
+      <field name="WHERE1">FROM_START</field>
+      <field name="WHERE2">FROM_END</field>
+    </block>
+    <block type="text_changeCase"></block>
+    <block type="text_trim"></block>
+    <block type="text_print"></block>
+    <block type="text_prompt_ext">
+      <field name="TYPE">TEXT</field>
+    </block>
+  </category>
+  <category name="Lists" colour="#745CA6">
+    <block type="lists_create_empty"></block>
+    <block type="lists_create_with"></block>
+    <block type="lists_repeat"></block>
+    <block type="lists_length"></block>
+    <block type="lists_isEmpty"></block>
+    <block type="lists_indexOf">
+      <field name="END">FIRST</field>
+    </block>
+    <block type="lists_getIndex">
+      <field name="MODE">GET</field>
+      <field name="WHERE">FROM_START</field>
+    </block>
+    <block type="lists_setIndex">
+      <field name="MODE">SET</field>
+      <field name="WHERE">FROM_START</field>
+    </block>
+    <block type="lists_getSublist">
+      <field name="WHERE1">FROM_START</field>
+      <field name="WHERE2">FROM_END</field>
+    </block>
+    <block type="lists_split">
+      <field name="MODE">SPLIT</field>
+    </block>
+    <block type="lists_sort"></block>
+  </category>
+  <category name="Colour" colour="#A6745C">
+    <block type="colour_picker"></block>
+    <block type="colour_random"></block>
+    <block type="colour_rgb"></block>
+    <block type="colour_blend"></block>
+  </category>
+  <category name="Variables" colour="#A65C81" custom="VARIABLE"></category>
+  <category name="Functions" colour="#9A5CA6" custom="PROCEDURE"></category>
+  <category name="Custom Blocks" colour="#FF6680">
+    <block type="andar"></block>
+  </category>
+</xml>
+`;
+
+
+
+
+const SubmitLevel: React.FC<SubmitProps> = ({ matrixData }) => {
+    const navigate = useNavigate();
+    const [scale, setScale] = useState(1);
+    const [xml, setXml] = useState<string>('<xml xmlns="http://www.w3.org/1999/xhtml"></xml>');
+    const [isAnimating, setIsAnimating] = useState(false); 
+    const [matrix, setMatrix] = useState(matrixData);
+    function deepCopyMatrix(matrix: any[][]): any[][] {
+        return matrix.map(row => [...row]);
+    }
+    const levelMatrix = deepCopyMatrix(matrix);
+    const [key, setKey] = useState(false);
+    const [complete, setComplete] = useState(false);
+    const findStartPosition = (matrixData: number[][]) => {
+        for (let i = 0; i < matrixData.length; i++) {
+            for (let j = 0; j < matrixData[i].length; j++) {
+                if (matrixData[i][j] === 5) {
+                    return { x: j, y: i };
+                }
+            }
+        }
+
+        return { x: -1, y: -1 };
+    }
+    const initialPosition = findStartPosition(matrixData);
+    const [position, setPosition] = useState(initialPosition);
+    const handleGoCelinaRoom = () => {
+        navigate('/CelinaRoom');
+    };
+
+    Blockly.Blocks['andar'] = {
+        init: function () {
+            this.appendDummyInput()
+                .appendField("Andar")
+                .appendField(new Blockly.FieldDropdown([["esquerda", "left"], ["direita", "right"], ["cima", "up"], ["baixo", "down"]]), "direction");
+            this.setPreviousStatement(true, null);
+            this.setNextStatement(true, null);
+            this.setColour(230);
+            this.setTooltip("");
+            this.setHelpUrl("");
+        }
+    };
+
+    javascriptGenerator.forBlock['andar'] = function (block: Blockly.Block, generator: Blockly.Generator) {
+        var direction = block.getFieldValue('direction');
+        const code = `
+        // Andar ${direction}
+            switch ('${direction}') {
+                
+                case 'left':
+                    if (position.x > 0 && matrix[position.y][position.x - 1] === 1) {
+                        matrix[position.y][position.x - 1] = 5;
+                        matrix[position.y][position.x] = 1;
+                        position = { x: position.x - 1, y: position.y }
+                        setPosition(position);
+                    } else if (position.x > 0 && matrix[position.y][position.x - 1] === 3) {
+                        setKey(true)
+                        matrix[position.y][position.x - 1] = 5;
+                        matrix[position.y][position.x] = 1;
+                        position = { x: position.x - 1, y: position.y }
+                        setPosition(position);
+                    } else if (position.x > 0 && matrix[position.y][position.x - 1] === 4) {
+                        if (key) {
+                            setComplete(true);
+                            matrix[position.y][position.x - 1] = 5;
+                            matrix[position.y][position.x] = 1;
+                            position = { x: position.x - 1, y: position.y }
+                            setPosition(position);
+                        }
+                    }
+                    break;
+                case 'right':
+                    if (position.x < matrix[0].length - 1 && matrix[position.y][position.x + 1] === 1) {
+                        matrix[position.y][position.x + 1] = 5;
+                        matrix[position.y][position.x] = 1;
+                        position = { x: position.x + 1, y: position.y }
+                        setPosition(position);
+                    } else if (position.x < matrix[0].length - 1 && matrix[position.y][position.x + 1] === 3) {
+                        setKey(true)
+                        matrix[position.y][position.x + 1] = 5;
+                        matrix[position.y][position.x] = 1;
+                        position = { x: position.x + 1, y: position.y }
+                        setPosition(position);
+                    } else if (position.x < matrix[0].length - 1 && matrix[position.y][position.x + 1] === 4) {
+                        if (key) {
+                            setComplete(true);
+                            matrix[position.y][position.x + 1] = 5;
+                            matrix[position.y][position.x] = 1;
+                            position = { x: position.x + 1, y: position.y }
+                            setPosition(position);
+                        }
+                    }
+                    break;
+                case 'up':
+                    if (position.y > 0 && matrix[position.y - 1][position.x] === 1) {
+                        matrix[position.y - 1][position.x] = 5;
+                        matrix[position.y][position.x] = 1;
+                        position = { x: position.x, y: position.y - 1 }
+                        setPosition(position);
+                    } else if (position.y > 0 && matrix[position.y - 1][position.x] === 3) {
+                        setKey(true)
+                        matrix[position.y - 1][position.x] = 5;
+                        matrix[position.y][position.x] = 1;
+                        position = { x: position.x, y: position.y - 1 }
+                        setPosition(position);
+                    } else if (position.y > 0 && matrix[position.y - 1][position.x] === 4) {
+                        if (key) {
+                            setComplete(true);
+                            matrix[position.y - 1][position.x] = 5;
+                            matrix[position.y][position.x] = 1;
+                            position = { x: position.x, y: position.y - 1 }
+                            setPosition(position);
+                        }
+                    }
+                    break;
+                case 'down':
+                    if (position.y < matrix.length - 1 && matrix[position.y + 1][position.x] === 1) {
+                        matrix[position.y + 1][position.x] = 5;
+                        matrix[position.y][position.x] = 1;
+                        position = { x: position.x, y: position.y + 1 }
+                        setPosition(position);
+                    } else if (position.y < matrix.length - 1 && matrix[position.y + 1][position.x] === 3) {
+                        setKey(true)
+                        matrix[position.y + 1][position.x] = 5;
+                        matrix[position.y][position.x] = 1;
+                        position = { x: position.x, y: position.y + 1 }
+                        setPosition(position);
+                    } else if (position.y < matrix.length - 1 && matrix[position.y + 1][position.x] === 4) {
+                        if (key) {
+                            setComplete(true);
+                            matrix[position.y + 1][position.x] = 5;
+                            matrix[position.y][position.x] = 1;
+                            position = { x: position.x, y: position.y + 1 }
+                            setPosition(position);
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+            setMatrix([...matrix]);
+            await sleep(500);  // Delay for animation
+        
+    `;
+        return code;
+    };
+    // Blockly.JavaScript['andar'] = function (block: Blockly.Block) {
+    //     const direction = block.getFieldValue('direction');
+
+    // };
+
+    const handleRunCode = async () => {
+        console.log("MATRIZ ORIGINAL: \n" + matrix)
+        console.log("MATRIZ COPIA: \n" + levelMatrix)
+        setIsAnimating(true); // Inicia a animação
+        const workspace = Blockly.getMainWorkspace();
+        await updateMatrixAsync(workspace, matrix, setMatrix, key, setKey, complete, setComplete, position, setPosition);
+        setIsAnimating(false); // Finaliza a animação
+        console.log("MATRIZ ORIGINAL: \n" + matrix)
+        console.log("MATRIZ COPIA: \n" + levelMatrix)
+    };
+    const handleCellClick = () => {
+
+    }
+    return (
+        <div className="submiter">
+            <div className='matrix-container-submiter'>
+                <div className='matrix-submiter' style={{ transform: `scale(${scale})`, transformOrigin: 'top left', width: matrix[0].length * 30, height: matrix.length * 30 }}>
+                    <Matriz matriz={matrix} onCellClick={handleCellClick} />
+                </div>
+            </div>
+            <Slider
+                value={scale * 10}
+                className='sliderzoom'
+                onChange={(event, newValue) => {
+                    if (typeof newValue === 'number') {
+                        setScale(newValue / 10);
+                    }
+                }}
+                aria-labelledby="continuous-slider"
+                step={0.1}
+                min={1}
+                max={10}
+                valueLabelDisplay="auto"
+            />
+            <div className='blockly-container'>
+                <BlocklyWorkspace
+                    toolboxConfiguration={TOOL_BOX_CATEGORIES}
+                    className="blockly-workspace"
+                    initialXml={xml}
+                    workspaceConfiguration={{
+                        grid: {
+                            spacing: 20,
+                            length: 3,
+                            colour: "#ccc",
+                            snap: true,
+                        },
+                        readOnly: false,
+                        zoom: {
+                            controls: true,
+                            wheel: true,
+                            startScale: 0.5,
+                            maxScale: 3,
+                            minScale: 0.3,
+                            scaleSpeed: 1.2
+                        },
+                    }}
+                    onXmlChange={newXml => setXml(newXml)}
+                />
+            </div>
+            <div className='btns'>
+                <button className='run-btn' onClick={handleRunCode} disabled={isAnimating}>Run</button>
+                <button className='leave-btn' onClick={handleGoCelinaRoom}>Voltar</button>
+            </div>
+        </div>
+    );
+}
+
+export default SubmitLevel;
+
+
+
+// import React, { useState } from 'react';
+// import './index_submiter.scss';
+// import Matriz from '../Matrix/Matrix';
+// import { useNavigate } from 'react-router-dom';
+// import { Slider } from '@mui/material';
+// import { BlocklyWorkspace } from 'react-blockly';
+// import Blockly from "blockly";
+// import MatrizPopup from '../MatrizPopup/MatrizPopup';
+// interface SubmitProps {
+//     matrixData: number[][];
+// }
+// type CustomToolboxCategory = 'VARIABLE' | 'PROCEDURE';
+
+// interface ToolboxBlock {
+//     type: string,
+//     colour?: string,
+
+// }
+// interface ToolboxCategory {
+//     name: string,
+//     custom?: CustomToolboxCategory,
+//     blocks: ToolboxBlock[],
+// }
+// const TOOL_BOX_CATEGORIES = `
+// <xml xmlns="http://www.w3.org/1999/xhtml">
+//   <category name="Logic" colour="#5C81A6">
+//     <block type="controls_if"></block>
+//     <block type="logic_compare"></block>
+//     <block type="logic_operation"></block>
+//     <block type="logic_negate"></block>
+//     <block type="logic_boolean"></block>
+//     <block type="logic_null"></block>
+//     <block type="logic_ternary"></block>
+//   </category>
+//   <category name="Loops" colour="#5CA65C">
+//     <block type="controls_repeat_ext">
+//       <value name="TIMES">
+//         <block type="math_number">
+//           <field name="NUM">10</field>
+//         </block>
+//       </value>
+//     </block>
+//     <block type="controls_whileUntil"></block>
+//     <block type="controls_for">
+//       <field name="VAR">i</field>
+//       <value name="FROM">
+//         <block type="math_number">
+//           <field name="NUM">1</field>
+//         </block>
+//       </value>
+//       <value name="TO">
+//         <block type="math_number">
+//           <field name="NUM">10</field>
+//         </block>
+//       </value>
+//       <value name="BY">
+//         <block type="math_number">
+//           <field name="NUM">1</field>
+//         </block>
+//       </value>
+//     </block>
+//     <block type="controls_forEach"></block>
+//     <block type="controls_flow_statements"></block>
+//   </category>
+//   <category name="Math" colour="#5C68A6">
+//     <block type="math_number"></block>
+//     <block type="math_arithmetic"></block>
+//     <block type="math_single"></block>
+//     <block type="math_trig"></block>
+//     <block type="math_constant"></block>
+//     <block type="math_number_property"></block>
+//     <block type="math_round"></block>
+//     <block type="math_on_list"></block>
+//     <block type="math_modulo"></block>
+//     <block type="math_constrain"></block>
+//     <block type="math_random_int"></block>
+//     <block type="math_random_float"></block>
+//   </category>
+//   <category name="Text" colour="#5CA68D">
+//     <block type="text"></block>
+//     <block type="text_join"></block>
+//     <block type="text_append">
+//       <field name="VAR">item</field>
+//     </block>
+//     <block type="text_length"></block>
+//     <block type="text_isEmpty"></block>
+//     <block type="text_indexOf">
+//       <field name="END">FIRST</field>
+//     </block>
+//     <block type="text_charAt">
+//       <field name="WHERE">FROM_START</field>
+//     </block>
+//     <block type="text_getSubstring">
+//       <field name="WHERE1">FROM_START</field>
+//       <field name="WHERE2">FROM_END</field>
+//     </block>
+//     <block type="text_changeCase"></block>
+//     <block type="text_trim"></block>
+//     <block type="text_print"></block>
+//     <block type="text_prompt_ext">
+//       <field name="TYPE">TEXT</field>
+//     </block>
+//   </category>
+//   <category name="Lists" colour="#745CA6">
+//     <block type="lists_create_empty"></block>
+//     <block type="lists_create_with"></block>
+//     <block type="lists_repeat"></block>
+//     <block type="lists_length"></block>
+//     <block type="lists_isEmpty"></block>
+//     <block type="lists_indexOf">
+//       <field name="END">FIRST</field>
+//     </block>
+//     <block type="lists_getIndex">
+//       <field name="MODE">GET</field>
+//       <field name="WHERE">FROM_START</field>
+//     </block>
+//     <block type="lists_setIndex">
+//       <field name="MODE">SET</field>
+//       <field name="WHERE">FROM_START</field>
+//     </block>
+//     <block type="lists_getSublist">
+//       <field name="WHERE1">FROM_START</field>
+//       <field name="WHERE2">FROM_END</field>
+//     </block>
+//     <block type="lists_split">
+//       <field name="MODE">SPLIT</field>
+//     </block>
+//     <block type="lists_sort"></block>
+//   </category>
+//   <category name="Colour" colour="#A6745C">
+//     <block type="colour_picker"></block>
+//     <block type="colour_random"></block>
+//     <block type="colour_rgb"></block>
+//     <block type="colour_blend"></block>
+//   </category>
+//   <category name="Variables" colour="#A65C81" custom="VARIABLE"></category>
+//   <category name="Functions" colour="#9A5CA6" custom="PROCEDURE"></category>
+//   <category name="Custom Blocks" colour="#FF6680">
+//     <block type="andar"></block>
+//   </category>
+// </xml>
+// `;
+
+// Blockly.Blocks['andar'] = {
+//     init: function () {
+//         this.appendDummyInput()
+//             .appendField("Andar")
+//             .appendField(new Blockly.FieldDropdown([["esquerda", "left"], ["direita", "right"], ["cima", "up"], ["baixo", "down"]]), "direction");
+//         this.setPreviousStatement(true, null);
+//         this.setNextStatement(true, null);
+//         this.setColour(230);
+//         this.setTooltip("");
+//         this.setHelpUrl("");
+//     }
+// };
+
+// Blockly.JavaScript['andar'] = function (block: Blockly.Block) {
+//     const direction = block.getFieldValue('direction');
+//     const code = `
+//         // Andar ${direction}
+//         let playerPosition = findPlayer(matrix);
+//         let key = false;
+//         let complete = false;
+//         if (playerPosition) {
+//             let [x, y] = playerPosition;
+//             switch ('${direction}') {
+//                 case 'left':
+//                     if (y > 0) y -= 1;
+//                     break;
+//                 case 'right':
+//                     if (y < matrix[0].length - 1) y += 1;
+//                     break;
+// case 'up':
+//     if (y > 0 && matrix[y - 1][x] === 1) {
+//         matrix[y - 1][x] = 5;
+//         matrix[y][x] = 1;
+//     } else if (y > 0 && matrix[y - 1][x] === 3) {
+//         key = true;
+//         matrix[y - 1][x] = 5;
+//         matrix[y][x] = 1;
+//     } else if (y > 0 && matrix[y - 1][x] === 4) {
+//         if (key) {
+//             complete = true;
+//             matrix[y - 1][x] = 5;
+//             matrix[y][x] = 1;
+//         }
+//     }
+//     break;
+// case 'down':
+//     if (y < matrix.length - 1 && matrix[y + 1][x] === 1) {
+//         matrix[y + 1][x] = 5;
+//         matrix[y][x] = 1;
+//     } else if (y < matrix.length - 1 && matrix[y + 1][x] === 3) {
+//         key = true;
+//         matrix[y + 1][x] = 5;
+//         matrix[y][x] = 1;
+//     } else if (y < matrix.length - 1 && matrix[y + 1][x] === 4) {
+//         if (key) {
+//             complete = true;
+//             matrix[y + 1][x] = 5;
+//             matrix[y][x] = 1;
+//         }
+//     }
+//     break;
+// default:
+//     break;
+//             }
+//             setMatrix([...matrix]);
+//             await sleep(500);  // Delay for animation
+//         }
+//     `;
+//     return code;
+// };
+// Blockly.Blocks['andar'] = {
+//     init: function () {
+//         this.appendDummyInput()
+//             .appendField("Andar")
+//             .appendField(new Blockly.FieldDropdown([["esquerda", "left"], ["direita", "right"], ["cima", "up"], ["baixo", "down"]]), "direction");
+//         this.setPreviousStatement(true, null);
+//         this.setNextStatement(true, null);
+//         this.setColour(230);
+//         this.setTooltip("");
+//         this.setHelpUrl("");
+//     }
+// };
+
+// Blockly.Blocks['number'] = {
+//     init: function () {
+//         this.appendDummyInput()
+//             .appendField(new Blockly.FieldNumber(0, 0, 999, 1), 'times');
+//         this.setOutput(true, 'Number');
+//         this.setTooltip("");
+//         this.setHelpUrl("");
+//     }
+// };
+
+// const SubmitLevel: React.FC<SubmitProps> = ({ matrixData }) => {
+//     const navigate = useNavigate();
+//     const [scale, setScale] = useState(1);
+//     const [xml, setXml] = useState<string>('<xml xmlns="http://www.w3.org/1999/xhtml"></field></block></xml>');
+//     const [isAnimating, setIsAnimating] = useState(false); // Para controlar o estado da animação
+
+//     const findStartPosition = (matrixData: number[][]) => {
+//         for (let i = 0; i < matrixData.length; i++) {
+//             for (let j = 0; j < matrixData[i].length; j++) {
+//                 if (matrixData[i][j] === 5) {
+//                     return { x: j, y: i };
+//                 }
+//             }
+//         }
+
+//         return { x: -1, y: -1 };
+//     }
+
+// const initialPosition = findStartPosition(matrixData);
+// const [position, setPosition] = useState(initialPosition);
+
+
+//     const updateMatrixAsync = async (matrixData: string | any[], xml: string, position: { x: number; y: number; }, setPosition: (arg0: { x: any; y: any; }) => void) => {
+//         const parser = new DOMParser();
+//         const xmlDoc = parser.parseFromString(xml, "text/xml");
+//         const workspace = new Blockly.Workspace();
+
+//         Blockly.Xml.domToWorkspace(xmlDoc.documentElement, workspace);
+
+//         const blocks = workspace.getTopBlocks(true); // Obtém apenas os blocos de nível superior
+
+//         const updatedMatrix = [...matrixData];
+
+//         let key = false;
+//         let complete = false;
+//         const executeBlock = async (block: Blockly.Block, position: { x: number; y: number }) => {
+//             switch (block.type) {
+//                 case "andar":
+//                     const direction = block.getFieldValue('direction');
+//                     switch (direction) {
+//                         case "left":
+//                             if (position.x > 0 && matrixData[position.y][position.x - 1] === 1) {
+//                                 updatedMatrix[position.y][position.x - 1] = 5;
+//                                 updatedMatrix[position.y][position.x] = 1;
+                                // position = { x: position.x - 1, y: position.y }
+                                // setPosition(position);
+//                             } else if (position.x > 0 && matrixData[position.y][position.x - 1] === 3) {
+//                                 key = true;
+//                                 updatedMatrix[position.y][position.x - 1] = 5;
+//                                 updatedMatrix[position.y][position.x] = 1;
+//                                 position = { x: position.x - 1, y: position.y }
+//                                 setPosition(position);
+//                             } else if (position.x > 0 && matrixData[position.y][position.x - 1] === 4) {
+//                                 if (key) {
+//                                     complete = true;
+//                                     updatedMatrix[position.y][position.x - 1] = 5;
+//                                     updatedMatrix[position.y][position.x] = 1;
+//                                     position = { x: position.x - 1, y: position.y }
+//                                     setPosition(position);
+//                                 }
+//                             }
+//                             break;
+//                         case "right":
+//                             if (position.x < matrixData[0].length - 1 && matrixData[position.y][position.x + 1] === 1) {
+//                                 updatedMatrix[position.y][position.x + 1] = 5;
+//                                 updatedMatrix[position.y][position.x] = 1;
+                                // position = { x: position.x + 1, y: position.y }
+                                // setPosition(position);
+//                             } else if (position.x < matrixData[0].length - 1 && matrixData[position.y][position.x + 1] === 3) {
+//                                 key = true;
+//                                 updatedMatrix[position.y][position.x + 1] = 5;
+//                                 updatedMatrix[position.y][position.x] = 1;
+                                // position = { x: position.x + 1, y: position.y }
+                                // setPosition(position);
+//                             } else if (position.x < matrixData[0].length - 1 && matrixData[position.y][position.x + 1] === 4) {
+//                                 if (key) {
+//                                     complete = true;
+//                                     updatedMatrix[position.y][position.x + 1] = 5;
+//                                     updatedMatrix[position.y][position.x] = 1;
+//                                     position = { x: position.x + 1, y: position.y }
+//                                     setPosition(position);
+//                                 }
+//                             }
+//                             break;
+//                         case "up":
+//                             if (position.y > 0 && matrixData[position.y - 1][position.x] === 1) {
+//                                 updatedMatrix[position.y - 1][position.x] = 5;
+//                                 updatedMatrix[position.y][position.x] = 1;
+                                // position = { x: position.x, y: position.y - 1 }
+                                // setPosition(position);
+//                             } else if (position.y > 0 && matrixData[position.y - 1][position.x] === 3) {
+//                                 key = true;
+//                                 updatedMatrix[position.y - 1][position.x] = 5;
+//                                 updatedMatrix[position.y][position.x] = 1;
+//                                 position = { x: position.x, y: position.y - 1 }
+//                                 setPosition(position);
+//                             } else if (position.y > 0 && matrixData[position.y - 1][position.x] === 4) {
+//                                 if (key) {
+//                                     complete = true;
+//                                     updatedMatrix[position.y - 1][position.x] = 5;
+//                                     updatedMatrix[position.y][position.x] = 1;
+//                                     position = { x: position.x, y: position.y - 1 }
+//                                     setPosition(position);
+//                                 }
+//                             }
+//                             break;
+//                         case "down":
+//                             if (position.y < matrixData.length - 1 && matrixData[position.y + 1][position.x] === 1) {
+//                                 updatedMatrix[position.y + 1][position.x] = 5;
+//                                 updatedMatrix[position.y][position.x] = 1;
+                                // position = { x: position.x, y: position.y + 1 }
+                                // setPosition(position);
+//                             } else if (position.y < matrixData.length - 1 && matrixData[position.y + 1][position.x] === 3) {
+//                                 key = true;
+//                                 updatedMatrix[position.y + 1][position.x] = 5;
+//                                 updatedMatrix[position.y][position.x] = 1;
+//                                 position = { x: position.x, y: position.y + 1 };
+//                                 setPosition(position);
+//                             } else if (position.y < matrixData.length - 1 && matrixData[position.y + 1][position.x] === 4) {
+//                                 if (key) {
+//                                     complete = true;
+//                                     updatedMatrix[position.y + 1][position.x] = 5;
+//                                     updatedMatrix[position.y][position.x] = 1;
+//                                     position = { x: position.x, y: position.y + 1 };
+//                                     setPosition(position);
+//                                 }
+//                             }
+//                             break;
+//                         default:
+//                             break;
+//                     }
+//                     break;
+//                 case "controls_repeat_ext":
+//                     const times = block.getChildren(false)[0].getField('times')?.getValue();
+
+//                     const subBlocks = block.getChildren(false);
+//                     for (let i = 0; i < times; i++) {
+//                         console.log("vitor " + position.x)
+//                         for (const subBlock of subBlocks) {
+//                             position = await executeBlock(subBlock, position);
+//                         }
+//                     }
+//                     break;
+//                 case "controls_if":
+
+//                     const conditionBlock = block.getInputTargetBlock('IF0');
+
+//                     if (conditionBlock) {
+//                         const condition = conditionBlock.getFieldValue('BOOL');
+//                         console.log(conditionBlock)
+//                         if (condition === 'TRUE') {
+//                             const ifBlocks = block.getInputTargetBlock('DO0');
+//                             if (ifBlocks) {
+//                                 position = await executeBlock(ifBlocks, position);
+//                             }
+//                         }
+//                     }
+//                     break;
+//                 case "controls_whileUntil":
+
+//                     const mode = block.getFieldValue('MODE');
+//                     const whileConditionBlock = block.getInputTargetBlock('BOOL');
+//                     let condition = whileConditionBlock ? whileConditionBlock.getFieldValue('BOOL') : 'FALSE';
+//                     const doBlocks = block.getInputTargetBlock('DO');
+//                     while ((mode === 'WHILE' && condition === 'TRUE') || (mode === 'UNTIL' && condition === 'FALSE')) {
+
+//                         if (doBlocks) {
+//                             position = await executeBlock(doBlocks, position);
+//                         }
+//                         condition = whileConditionBlock ? whileConditionBlock.getFieldValue('BOOL') : 'FALSE';
+//                     }
+//                     break;
+//                 case "controls_for":
+//                     const varName = block.getFieldValue('VAR');
+//                     const from = parseInt(block.getFieldValue('FROM'));
+//                     const to = parseInt(block.getFieldValue('TO'));
+//                     const by = parseInt(block.getFieldValue('BY'));
+//                     const forDoBlocks = block.getInputTargetBlock('DO');
+//                     for (let i = from; i <= to; i += by) {
+//                         if (forDoBlocks) {
+//                             position = await executeBlock(forDoBlocks, position);
+//                         }
+//                     }
+//                     break;
+
+//                 default:
+//                     break;
+//             }
+//             await new Promise(resolve => setTimeout(resolve, 70));
+//             return position;
+//         };
+
+//         for (const block of blocks) {
+//             await executeBlock(block, position);
+//         }
+
+//         return updatedMatrix;
+//     };
+
+//     const handleGoCelinaRoom = () => {
+//         navigate('/CelinaRoom');
+//     };
+
+//     const handleCellClick = () => {
+
+//     }
+
+//     const handleRunCode = async () => {
+//         //console.log(xml)
+//         setIsAnimating(true); // Inicia a animação
+//         const updatedMatrix = await updateMatrixAsync(matrixData, xml, position, setPosition);
+//         setPopupMatrix(updatedMatrix); // Atualiza a matriz do popup
+//         setIsAnimating(false); // Finaliza a animação
+//     };
+//     const matrixWidth = matrixData[0].length * 30;
+//     const matrixHeight = matrixData.length * 30;
+
+
+//     return (
+//         <div className="submiter">
+//             <div className='matrix-container-submiter'>
+//                 <div className='matrix-submiter' style={{ transform: `scale(${scale})`, transformOrigin: 'top left', width: matrixWidth, height: matrixHeight }}>
+//                     <Matriz matriz={matrixData} onCellClick={handleCellClick} />
+//                 </div>
+//             </div>
+//             <Slider
+//                 value={scale * 10}
+//                 className='sliderzoom'
+//                 onChange={(event, newValue) => {
+//                     if (typeof newValue === 'number') {
+//                         setScale(newValue / 10);
+//                     }
+//                 }}
+//                 aria-labelledby="continuous-slider"
+//                 step={0.1}
+//                 min={1}
+//                 max={10}
+//                 valueLabelDisplay="auto"
+//             />
+//             <div className='blockly-container'>
+//                 <BlocklyWorkspace
+//                     toolboxConfiguration={{
+//                         kind: 'categoryToolbox',
+//                         contents: TOOL_BOX_CATEGORIES.map(category => ({
+//                             kind: "category",
+//                             name: category.name,
+//                             contents: category.blocks.map(block => ({
+//                                 kind: "block",
+//                                 type: block.type,
+//                             })),
+//                         })),
+//                     }}
+//                     className="blockly-workspace"
+//                     initialXml={xml}
+//                     workspaceConfiguration={{
+//                         grid: {
+//                             spacing: 20,
+//                             length: 3,
+//                             colour: "#ccc",
+//                             snap: true,
+//                         },
+//                         readOnly: false,
+//                         zoom: {
+//                             controls: true,
+//                             wheel: true,
+//                             startScale: 0.5,
+//                             maxScale: 3,
+//                             minScale: 0.3,
+//                             scaleSpeed: 1.2
+//                         },
+//                     }}
+//                     onXmlChange={newXml => setXml(newXml)}
+//                 />
+//             </div>
+
+//             <div className='btns'>
+//                 <button className='run-btn' onClick={handleRunCode}>Run</button>
+//                 <button className='leave-btn' onClick={handleGoCelinaRoom}>Voltar</button>
+//             </div>
+
+//         </div>
+//     );
+// }
+
+// export default SubmitLevel;

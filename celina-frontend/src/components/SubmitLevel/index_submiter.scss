@@ -1,0 +1,81 @@
+.submiter {
+  display: flex;
+  flex-direction: column;
+  scale: 1;
+  border: 2px solid black;
+  background-color: gray;
+  position: relative;
+  height: 800px;
+  width: 800px;
+
+  .leave-btn {
+    font-size: 20px;
+    width: 320px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+  }
+
+
+  .run-btn {
+    font-size: 20px;
+    width: 320px;
+    position: absolute;
+    background-color: #90BC8F;
+    right: 0;
+    bottom: 0;
+  }
+}
+
+.matrix-container-submiter {
+  width: 600px;
+  height: 300px;
+  overflow: auto;
+}
+
+.matrix-submiter {
+  scale: 3;
+
+  width: fit-content;
+  height: fit-content;
+}
+
+
+.sliderzoom {
+  scale: 0.5;
+  width: 100px;
+}
+
+.blockly-container {
+  border: 2px solid black;
+  width: 100%;
+  height: 50%;
+  overflow: auto;
+}
+
+.blockly-workspace {
+  width: 100%;
+  height: 100%;
+  
+}
+
+.popup-overlay-matriz {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Cor de fundo semi-transparente */
+  z-index: 1000; /* Certifique-se de que o overlay esteja acima de outros elementos */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content-matriz {
+  background-color: white; /* Cor de fundo do conteúdo do popup */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Sombra do conteúdo do popup */
+  z-index: 1001; /* Certifique-se de que o conteúdo do popup esteja acima do overlay */
+}

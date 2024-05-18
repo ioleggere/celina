@@ -8,12 +8,15 @@ import { RequireAuth } from './contexts/Auth/RequireAuth';
 import LobbyRoom from './pages/Lobby';
 import CelRoom from './pages/SalaCelina';
 import MakerRoom from './pages/Maker';
+import SubmitLevelRoom from './pages/SubmitLevel';
+
 function App() {
   const { user, validateToken } = useContext(AuthContext);
   const navigate = useNavigate();
+
   useEffect(() => {
     const fetchData = async () => {
-        await validateToken();
+      await validateToken();
     };
     fetchData();
   }, []);
@@ -30,13 +33,14 @@ function App() {
   return (
     <>
       <Routes>
-      <Route path='/' element={user ? <Navigate to="/Lobby" replace /> : <Navigate to="/Login" replace />} />
-      <Route path='/Login' element={<Login />} />
-      <Route path='/Register' element={<Register />} />
-      <Route path='/Lobby' element={<RequireAuth><LobbyRoom /></RequireAuth>} />
-      <Route path='/CelinaRoom' element={<RequireAuth><CelRoom /></RequireAuth>} />
-      <Route path='/Maker' element={<RequireAuth><MakerRoom /></RequireAuth>} />
-    </Routes>
+        <Route path='/' element={user ? <Navigate to="/Lobby" replace /> : <Navigate to="/Login" replace />} />
+        <Route path='/Login' element={<Login />} />
+        <Route path='/Register' element={<Register />} />
+        <Route path='/Lobby' element={<RequireAuth><LobbyRoom /></RequireAuth>} />
+        <Route path='/CelinaRoom' element={<RequireAuth><CelRoom /></RequireAuth>} />
+        <Route path='/Maker' element={<RequireAuth><MakerRoom /></RequireAuth>} />
+        <Route path='/SubmitLevel' element={<RequireAuth><SubmitLevelRoom /></RequireAuth>} />
+      </Routes>
     </>
   )
 }

@@ -29,9 +29,9 @@ const Lobby: React.FC<LobbyProps> = ({ isFocused }) => {
                 />
                 <Panda xsize={188} ysize={90} canMove={isFocused} />
                 {showPopup && (
-                <div className="popup">
-                    <div className="popup-content">
-                        <p className="popup-text">
+                <div className="popup-manel">
+                    <div className="popup-content-manel">
+                        <p className="popup-text-manel">
                             Este é o lendario "Goleta de Manel", fez história enquanto esteve em suas mãos!
                             
                         </p>

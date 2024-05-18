@@ -12,7 +12,6 @@ function Maker() {
 
     useEffect(() => {
         updateMatrixSize();
-        console.log("vitor")
     }, [matrixData]);
 
     const updateMatrixSize = () => {
@@ -87,6 +86,9 @@ function Maker() {
         navigate('/CelinaRoom');
     };
 
+    const handleGoPlay = () => {
+        navigate('/SubmitLevel', { state: { matrixData } });
+    }
     const handleZoomIn = () => {
         setScale(prevScale => Math.min(prevScale + 0.1, 1));
     };
@@ -101,10 +103,26 @@ function Maker() {
 
     const handleCellClick = (rowIndex: number, cellIndex: number) => {
         if (selectedImage !== null) {
+            const selectedValue = parseInt(selectedImage.replace('.png', ''), 10);
             const newMatrixData = [...matrixData];
-            newMatrixData[rowIndex][cellIndex] = parseInt(selectedImage.replace('.png', ''), 10);
-            setMatrixData(newMatrixData);
-            console.log(newMatrixData);
+
+            // Verificar se a imagem selecionada é 3.png, 4.png ou 5.png
+            if (selectedValue >= 3 && selectedValue <= 5) {
+                // Verificar se o valor já existe na matriz
+                const existsInMatrix = newMatrixData.some(row => row.includes(selectedValue));
+
+                // Se o valor não existir na matriz, adicione-o
+                if (!existsInMatrix) {
+                    newMatrixData[rowIndex][cellIndex] = selectedValue;
+                    setMatrixData(newMatrixData);
+                } else {
+                    console.log(`O valor ${selectedValue} já existe na matriz.`);
+                }
+            } else {
+                // Se a imagem selecionada não for 3.png, 4.png ou 5.png, adicione-a diretamente
+                newMatrixData[rowIndex][cellIndex] = selectedValue;
+                setMatrixData(newMatrixData);
+            }
         }
     };
 
@@ -127,16 +145,17 @@ function Maker() {
                 className='sliderzoom'
                 onChange={(event, newValue) => {
                     if (typeof newValue === 'number') {
-                        setScale(newValue / 10); 
+                        setScale(newValue / 10);
                     }
                 }}
                 aria-labelledby="continuous-slider"
                 step={0.1}
-                min={1} 
-                max={10} 
+                min={1}
+                max={10}
                 valueLabelDisplay="auto"
             />
             <button className='leave-btn' onClick={handleGoCelinaRoom}>Voltar</button>
+            <button className='submit-btn' onClick={handleGoPlay}>Concluir</button>
         </div>
 
     );

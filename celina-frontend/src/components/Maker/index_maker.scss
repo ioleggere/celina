@@ -7,44 +7,48 @@
   position: relative;
   height: 200px;
   width: 200px;
-  .leave-btn{
-      font-size: 5px; /* Tamanho da fonte menor */
-      width: 30px;
-      position: relative;
-  }
-  .zm-btn{
-    font-size: 3px; /* Tamanho da fonte menor */
+
+  .leave-btn {
+    font-size: 5px;
     width: 30px;
     position: relative;
-}
-  
+  }
+
+  .submit-btn {
+    font-size: 5px;
+    width: 35px;
+    position: absolute;
+    background-color: #90BC8F;
+    right: 0;
+    bottom: 0;
+  }
 }
 
 .matrix-container {
-  width: 200px; /* Largura máxima da matrix */
-  height: 200px; /* Altura máxima da matrix */
-  overflow: auto; /* Adiciona barras de rolagem quando necessário */
+  width: 200px;
+  height: 200px;
+  overflow: auto;
 }
 
 .matrix {
   scale: 1;
 
   width: 270px;
-  height: fit-content; 
+  height: fit-content;
 }
 
 .image-editor {
-  display: flex; 
-  align-items: center; 
+  display: flex;
+  align-items: center;
   gap: 2rem;
 }
 
-.actual-image{
+.actual-image {
   border: 2px solid red;
   width: 20px;
   height: 20px;
 }
 
-.sliderzoom{
+.sliderzoom {
   scale: 0.4;
 }
