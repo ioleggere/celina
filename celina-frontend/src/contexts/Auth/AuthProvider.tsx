@@ -26,7 +26,6 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
         try {
             const data = await api.signin(username, password);
             if (data) {
-                
                 setToken(data)
                 await validateToken();
                 return true;
@@ -60,6 +59,7 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
     const setToken = (token: string) => {
         localStorage.setItem('authToken', token);
     }
+
 
     return (
         <AuthContext.Provider value={{ user, signin, signout, validateToken, register }}>

@@ -20,6 +20,9 @@ const SalaCelina: React.FC<LobbyProps> = ({ isFocused }) => {
     const goMaker = () => {
         navigate('/Maker')
     }
+    const goPlay = () =>{
+        navigate('/Levels')
+    }
     const handleMouseLeave = () => {
         setShowMenenobox(false);
     };
@@ -55,7 +58,7 @@ const SalaCelina: React.FC<LobbyProps> = ({ isFocused }) => {
 
                         </p>
                         <button className="popup-btn" onClick={goMaker}>Criar Nivel</button>
-                        <button className="popup-btn" onClick={togglePopup}>Jogar</button>
+                        <button className="popup-btn" onClick={goPlay}>Jogar</button>
                         <button className="popup-btn" onClick={togglePopup}>Fechar</button>
                     </div>
                 </div>

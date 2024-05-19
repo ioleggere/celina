@@ -4,6 +4,7 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_cors import CORS
 
+import json
 
 import os
 app = Flask(__name__)
@@ -21,6 +22,12 @@ class User(db.Model):
     username = db.Column(db.String(100), unique=True, nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
+
+class Level(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    matrix = db.Column(db.Text, nullable=False)  
+
 db.create_all()
 
 @app.route('/register', methods=['POST'])
@@ -65,6 +72,49 @@ def protected():
             'email': user.email
         }
     }), 200
+
+@app.route('/add_level', methods=['POST'])
+def add_level():
+    data = request.json
+    name = data['name']
+    matrix = data['matrix']  # Assuming matrix is sent as a 2D list
+    
+    # Convert matrix to JSON string
+    matrix_json = json.dumps(matrix)
+    
+    new_level = Level(name=name, matrix=matrix_json)
+    db.session.add(new_level)
+    db.session.commit()
+    
+    return jsonify({'message': 'Level added successfully'}), 201
+
+@app.route('/get_level/<int:level_id>', methods=['GET'])
+def get_level(level_id):
+    level = Level.query.get(level_id)
+    if not level:
+        return jsonify({'message': 'Level not found'}), 404
+    
+    # Convert JSON string back to 2D list
+    matrix = json.loads(level.matrix)
+    
+    return jsonify({
+        'id': level.id,
+        'name': level.name,
+        'matrix': matrix
+    }), 200
+
+@app.route('/get_levels', methods=['GET'])
+def get_levels():
+    levels = Level.query.all()
+    all_levels = []
+    for level in levels:
+        all_levels.append({
+            'id': level.id,
+            'name': level.name,
+            'matrix': json.loads(level.matrix)
+        })
+    
+    return jsonify(all_levels), 200
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

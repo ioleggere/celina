@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './index_submiter.scss';
+import './index_playlevel.scss';
 import Matriz from '../Matrix/Matrix';
 import { useNavigate } from 'react-router-dom';
 import { Slider, TextField } from '@mui/material';
@@ -10,8 +10,7 @@ import 'blockly/javascript';
 import updateMatrixAsync from '../../hooks/updateMatrixAsync';
 import { javascriptGenerator } from 'blockly/javascript';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
-import { useApi } from '../../hooks/useApi';
-interface SubmitProps {
+interface PlayLevelProps {
   matrixData: number[][];
 }
 
@@ -138,17 +137,12 @@ const TOOL_BOX_CATEGORIES = `
 
 
 
-const SubmitLevel: React.FC<SubmitProps> = ({ matrixData }) => {
+const PlayLevel: React.FC<PlayLevelProps> = ({ matrixData }) => {
   const navigate = useNavigate();
   const [scale, setScale] = useState(1);
   const [xml, setXml] = useState<string>('<xml xmlns="http://www.w3.org/1999/xhtml"></xml>');
   const [isAnimating, setIsAnimating] = useState(false);
   const [matrix, setMatrix] = useState(matrixData);
-  const api = useApi();
-  function deepCopyMatrix(matrix: any[][]): any[][] {
-    return matrix.map(row => [...row]);
-  }
-  const levelMatrix = deepCopyMatrix(matrix);
   const [key, setKey] = useState(false);
   const [complete, setComplete] = useState(false);
   const [levelName, setLevelName] = useState('');
@@ -289,10 +283,7 @@ const SubmitLevel: React.FC<SubmitProps> = ({ matrixData }) => {
     `;
     return code;
   };
-  // Blockly.JavaScript['andar'] = function (block: Blockly.Block) {
-  //     const direction = block.getFieldValue('direction');
 
-  // };
   const handleRunCode = async () => {
     setIsAnimating(true);
     const workspace = Blockly.getMainWorkspace();
@@ -321,27 +312,7 @@ const SubmitLevel: React.FC<SubmitProps> = ({ matrixData }) => {
   const handleClosePopup = () => {
     setOpenPopup(false);
   };
-  const handleUploadLevel = async () => {
-    if (levelName.trim() !== '') {
-      await uploadLevel(levelName, levelMatrix);
-      handleGoCelinaRoom();
-    } else {
-      console.log('Please enter a level name.');
-    }
-  }
-  const uploadLevel = async (name: string, matrix: number[][]) => {
-    try {
-        const data = await api.addLevel(name, matrix)
-        if (data) {
-            console.log(data)
-            return true;
-        }
-        return false;
-    } catch (error) {
-        console.error('Error when upload level:', error);
-        return false;
-    }
-}
+
   return (
     <div className="submiter">
       <div className='matrix-container-submiter'>
@@ -396,12 +367,12 @@ const SubmitLevel: React.FC<SubmitProps> = ({ matrixData }) => {
         open={openPopup}
         onClose={handleClosePopup}
         aria-labelledby="Level Completo"
-        aria-describedby="Deseja upar o nivel?"
+        aria-describedby="Parabens!"
       >
         <DialogTitle id="complete-popup">{"Level Completo"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="complete-description">
-            Deseja upar o nivel?.
+            Conseguiu completar ein paizao!
           </DialogContentText>
           <TextField
             autoFocus
@@ -416,10 +387,7 @@ const SubmitLevel: React.FC<SubmitProps> = ({ matrixData }) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClosePopup} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleUploadLevel} color="primary" autoFocus>
-            Upar
+            Eba
           </Button>
         </DialogActions>
       </Dialog>
@@ -427,5 +395,5 @@ const SubmitLevel: React.FC<SubmitProps> = ({ matrixData }) => {
   );
 }
 
-export default SubmitLevel;
+export default PlayLevel;
 

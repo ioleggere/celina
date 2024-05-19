@@ -2,7 +2,7 @@ import Blockly from 'blockly';
 import { javascriptGenerator } from 'blockly/javascript';
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-const updateMatrixAsync = async (workspace: Blockly.Workspace, matrix: number[][], setMatrix: React.Dispatch<React.SetStateAction<number[][]>>, key: boolean, setKey:React.Dispatch<React.SetStateAction<boolean>>, complete: boolean, setComplete: React.Dispatch<React.SetStateAction<boolean>>, position: {x: number, y:number}, setPosition: React.Dispatch<React.SetStateAction<{x: number, y:number}>>) => {
+const updateMatrixAsync = async (workspace: Blockly.Workspace, matrix: number[][], setMatrix: React.Dispatch<React.SetStateAction<number[][]>>, key: boolean, setKey:React.Dispatch<React.SetStateAction<boolean>>, complete: boolean, setComplete: React.Dispatch<React.SetStateAction<boolean>>, position: {x: number, y:number}, setPosition: React.Dispatch<React.SetStateAction<{x: number, y:number}>>, completedLevel: () => void) => {
     const code = javascriptGenerator.workspaceToCode(workspace);
     
     const findPlayer = (matrix: number[][]): [number, number] | null => {
@@ -21,11 +21,17 @@ const updateMatrixAsync = async (workspace: Blockly.Workspace, matrix: number[][
         if (!playerPosition) {
             throw new Error("Player not found in the matrix.");
         }
-
+        let tkey = false;
+        let tcomplete = false;
         const [x, y] = playerPosition;
         
         await eval(`(async () => { ${code} })()`);
-        
+        if (tkey !== key) {
+            setKey(tkey);
+        }
+        if (tcomplete !== complete) {
+            setComplete(tcomplete);
+        }
     };
 
     try {

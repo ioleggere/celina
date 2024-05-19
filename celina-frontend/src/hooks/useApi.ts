@@ -47,5 +47,32 @@ export const useApi = () => ({
         } catch (error) {
             throw new Error('Username or email already exists');
         }
+    },
+    addLevel: async (name: string, matrix: number[][]) => {
+        try {
+            const response = await api.post('/add_level', {
+                name: name,
+                matrix: matrix
+            });
+            return response.data;
+        } catch (error) {
+            throw new Error('error adding level' + error);
+        }
+    },
+    getLevel: async (level_id: number) => {
+        try {
+            const response = await api.get('/get_level/'+level_id);
+            return response.data;
+        } catch (error) {
+            throw new Error('Username or email already exists');
+        }
+    },
+    getLevels: async () => {
+        try {
+            const response = await api.get('/get_levels');
+            return response.data;
+        } catch (error) {
+            throw new Error('Username or email already exists');
+        }
     }
 })
