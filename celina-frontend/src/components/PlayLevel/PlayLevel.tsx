@@ -145,7 +145,6 @@ const PlayLevel: React.FC<PlayLevelProps> = ({ matrixData }) => {
   const [matrix, setMatrix] = useState(matrixData);
   const [key, setKey] = useState(false);
   const [complete, setComplete] = useState(false);
-  const [levelName, setLevelName] = useState('');
   const findStartPosition = (matrixData: number[][]) => {
     for (let i = 0; i < matrixData.length; i++) {
       for (let j = 0; j < matrixData[i].length; j++) {
@@ -311,6 +310,7 @@ const PlayLevel: React.FC<PlayLevelProps> = ({ matrixData }) => {
   }
   const handleClosePopup = () => {
     setOpenPopup(false);
+    navigate('/CelinaRoom');
   };
 
   return (
@@ -374,16 +374,6 @@ const PlayLevel: React.FC<PlayLevelProps> = ({ matrixData }) => {
           <DialogContentText id="complete-description">
             Conseguiu completar ein paizao!
           </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="levelName"
-            label="Nome do nível"
-            type="text"
-            fullWidth
-            value={levelName}
-            onChange={(e) => setLevelName(e.target.value)}
-          />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClosePopup} color="primary">

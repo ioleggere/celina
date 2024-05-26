@@ -5,7 +5,6 @@ const api = axios.create({
     baseURL: import.meta.env.VITE_CELINA_API
 });
 
-
 export const useApi = () => ({
 
     validateToken: async (token: string) => {

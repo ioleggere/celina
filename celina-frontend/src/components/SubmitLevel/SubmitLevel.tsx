@@ -148,7 +148,7 @@ const SubmitLevel: React.FC<SubmitProps> = ({ matrixData }) => {
   function deepCopyMatrix(matrix: any[][]): any[][] {
     return matrix.map(row => [...row]);
   }
-  const levelMatrix = deepCopyMatrix(matrix);
+  const [levelMatrix, setLevelMatrix] = useState(deepCopyMatrix(matrix));
   const [key, setKey] = useState(false);
   const [complete, setComplete] = useState(false);
   const [levelName, setLevelName] = useState('');
