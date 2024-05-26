@@ -14,6 +14,7 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
         if (localData) {
             const data = await api.validateToken(localData);
             const user = {
+                id: data.logged_in_as.id,
                 username: data.logged_in_as.username,
                 email: data.logged_in_as.email,
                 password: "",

@@ -6,10 +6,11 @@ interface PandaProps {
     xsize: number;
     ysize: number;
     canMove: boolean;
+    position: {x: number, y: number}
 }
 
-const Panda: React.FC<PandaProps> = ({ xsize, ysize, canMove }) => {
-    const [playerPosition, setPlayerPosition] = useState({ x: 0, y: 0 });
+const Panda: React.FC<PandaProps> = ({ xsize, ysize, canMove, position }) => {
+    const [playerPosition, setPlayerPosition] = useState({ x: position.x, y: position.y });
     const [playerDirection, setPlayerDirection] = useState('right');
     const [isMoving, setIsMoving] = useState(false);
     const [clickCount, setClickCount] = useState(0);

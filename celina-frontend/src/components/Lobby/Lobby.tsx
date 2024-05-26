@@ -27,7 +27,7 @@ const Lobby: React.FC<LobbyProps> = ({ isFocused }) => {
                     className="floor-image"
                     style={{ position: 'relative', top: 0, left: 0 }}
                 />
-                <Panda xsize={188} ysize={90} canMove={isFocused} />
+                <Panda xsize={188} ysize={90} canMove={isFocused} position={{x: 0, y: 0}} />
                 {showPopup && (
                 <div className="popup-manel">
                     <div className="popup-content-manel">

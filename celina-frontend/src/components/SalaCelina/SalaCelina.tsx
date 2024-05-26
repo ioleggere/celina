@@ -46,7 +46,7 @@ const SalaCelina: React.FC<LobbyProps> = ({ isFocused }) => {
                     style={{ position: 'relative', top: 0, left: 0 }}
                 />
                 <div className='boudingboxplayers'>
-                    <Panda xsize={170} ysize={59} canMove={isFocused} />
+                    <Panda xsize={170} ysize={59} canMove={isFocused} position={{x: 0, y: 0}}/>
                 </div>
 
             </div>
