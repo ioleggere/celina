@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_cors import CORS
+from flask_socketio import SocketIO, Namespace, emit
 
 import json
 
@@ -15,7 +16,7 @@ db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 CORS(app)
-
+socketio = SocketIO(app, cors_allowed_origins="*")
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -116,5 +117,31 @@ def get_levels():
     
     return jsonify(all_levels), 200
 
+class RoomNamespace(Namespace):
+    def on_connect(self, data):
+        room = request.path.split('/')[-1]  # Extract the room name from the URL
+        self.room = room
+        print('Client connected to room:', room)
+        
+    def on_disconnect(self, data):
+        print('Client disconnected from room:', self.room)
+        if 'userId' in data and 'username' in data:
+            user_id = data['userId']
+            username = data['username']
+            emit('disconnect', {'userId': user_id, 'username': username}, room=self.room, include_self=False)
+    def on_player_position(self, data):
+        # Verifique se os dados contêm informações relevantes
+        if 'userId' in data and 'username' in data and 'newX' in data and 'newY' in data and 'direction' in data:
+            user_id = data['userId']
+            username = data['username']
+            new_x = data['newX']
+            new_y = data['newY']
+            direction = data['direction']
+            print('Received player position from user', user_id, '(', username, '):', new_x, ',', new_y)
+            # Envie os dados da posição para todos os outros clientes na mesma sala, exceto o remetente
+            emit('update_player_position', {'userId': user_id, 'username': username, 'newX': new_x, 'newY': new_y, 'direction': direction}, room=self.room, include_self=False)
+
+socketio.on_namespace(RoomNamespace('/lobby'))
+
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    socketio.run(app, debug=True, host='0.0.0.0')
