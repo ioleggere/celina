@@ -29,7 +29,7 @@ const Lobby: React.FC<LobbyProps> = ({ isFocused }) => {
 
     useEffect(() => {
         
-        socket.on('disconnect', (data: any) => {
+        socket.on('curstom_disconnect', (data: any) => {
             console.log('Disconnected from room:', data);
             // Remove o jogador desconectado da lista de jogadores
             setPlayers(prevPlayers => prevPlayers.filter(player => player.id !== data.userId));
@@ -60,13 +60,15 @@ const Lobby: React.FC<LobbyProps> = ({ isFocused }) => {
 
         });
         return () => {
-            socket.off('disconnect');
+            socket.off('curstom_disconnect');
             socket.off('update_player_position');
         };
     }, [players]);
     const handleGoCelinaRoom = () => {
         setDisconect(true)
-        navigate('/CelinaRoom')
+        setTimeout(() => {
+            navigate('/CelinaRoom');
+        }, 100);
     }
     return (
         <div className="lobby">

@@ -1,14 +1,39 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import './index.scss'
 import { AuthContext } from '../../contexts/Auth/AuthContext';
-const Chat: React.FC = () => {
+import io from 'socket.io-client';
+interface ChatProps {
+  room: string
+}
+
+const Chat: React.FC<ChatProps> = ({ room }) => {
   const [messages, setMessages] = useState<string[]>([]);
   const [input, setInput] = useState('');
+  const socket = io(import.meta.env.VITE_CELINA_API + '/' + room);
+  
+  useEffect(() => {
+    // Listen for messages from the server
+    socket.on('receive_message', (data) => {
+      setMessages((prevMessages) => [...prevMessages, `${data.username}: ${data.message}`]);
+    });
+
+    // Clean up the effect when the component is unmounted
+    return () => {
+      socket.disconnect();
+    };
+  }, [socket]);
 
   const handleMessageSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setMessages([...messages, (auth.user?.username +": " + input)]);
-    setInput('');
+    const message = input;
+    if (message.trim()) {
+      // Send the message to the server
+      socket.emit('send_message', {
+        username: auth.user?.username,
+        message
+      });
+      setInput('');
+    }
   };
   const auth = useContext(AuthContext);
   return (

@@ -38,12 +38,16 @@ const SalaCelina: React.FC<LobbyProps> = ({ isFocused }) => {
         setDisconect(true)
         navigate('/Levels')
     }
+    const goLobby = () => {
+        setDisconect(true)
+        navigate('/Lobby')
+    }
     const handleMouseLeave = () => {
         setShowMenenobox(false);
     };
     useEffect(() => {
 
-        socket.on('disconnect', (data: any) => {
+        socket.on('curstom_disconnect', (data: any) => {
             console.log('Disconnected from room:', data);
             // Remove o jogador desconectado da lista de jogadores
             setPlayers(prevPlayers => prevPlayers.filter(player => player.id !== data.userId));
@@ -69,7 +73,7 @@ const SalaCelina: React.FC<LobbyProps> = ({ isFocused }) => {
             }
         });
         return () => {
-            socket.off('disconnect');
+            socket.off('curstom_disconnect');
             socket.off('update_player_position');
         };
     }, []);
@@ -114,6 +118,7 @@ const SalaCelina: React.FC<LobbyProps> = ({ isFocused }) => {
                         </p>
                         <button className="popup-btn" onClick={goMaker}>Criar Nivel</button>
                         <button className="popup-btn" onClick={goPlay}>Jogar</button>
+                        <button className="popup-btn" onClick={goLobby}>Lobby</button>
                         <button className="popup-btn" onClick={togglePopup}>Fechar</button>
                     </div>
                 </div>

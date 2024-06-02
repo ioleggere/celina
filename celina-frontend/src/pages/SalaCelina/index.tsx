@@ -7,7 +7,7 @@ function CelRoom() {
     const [sceneOutFocus, setsceneOutFocus] = useState(false)
     const auth = useContext(AuthContext);
     const handleLogout = async () => {
-        await auth.signout();
+        await auth.signout('celroom');
         window.location.href = window.location.href;
     }
     const handleFocus = () => {
@@ -24,7 +24,7 @@ function CelRoom() {
                 <SalaCelina isFocused={!sceneOutFocus}  />
             </div>
             <div className="chat" onFocus={handleFocus} onBlur={handledesFocus}>
-                <Chat />
+                <Chat room="celroom"/>
             </div>
             <div className="btn_logout">
                 <button onClick={handleLogout} >Logout</button>

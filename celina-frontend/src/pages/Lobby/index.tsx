@@ -7,7 +7,7 @@ function LobbyRoom() {
     const [sceneOutFocus, setsceneOutFocus] = useState(false)
     const auth = useContext(AuthContext);
     const handleLogout = async () => {
-        await auth.signout();
+        await auth.signout('lobby');
         window.location.href = window.location.href;
     }
     const handleFocus = () => {
@@ -24,7 +24,7 @@ function LobbyRoom() {
                 <Lobby isFocused={!sceneOutFocus}  />
             </div>
             <div className="chat" onFocus={handleFocus} onBlur={handledesFocus}>
-                <Chat />
+                <Chat room='lobby'/>
             </div>
             <div className="btn_logout">
                 <button onClick={handleLogout} >Logout</button>
