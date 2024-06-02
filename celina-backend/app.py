@@ -185,5 +185,22 @@ class CelNamespace(Namespace):
 
 socketio.on_namespace(CelNamespace('/celroom'))
 
+class ChatNamespace(Namespace):
+    def on_connect(self):
+        room = request.path.split('/')[-1]  # Extract the room name from the URL
+        self.room = room
+        print(f'Client connected to chat room: {room}')
+
+    def on_disconnect(self):
+        print(f'Client disconnected from chat room: {self.room}')
+        emit('disconnect', {'message': 'A user has disconnected'}, room=self.room)
+
+    def on_message(self, data):
+        if data:
+            print(f'Received message: {data} in room: {self.room}')
+            emit('message', data, room=self.room)
+
+socketio.on_namespace(ChatNamespace('/chat'))
+
 if __name__ == '__main__':
     socketio.run(app, debug=True, host='0.0.0.0')

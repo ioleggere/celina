@@ -1,11 +1,12 @@
 
 
 import Panda from '../Player/Panda';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import './index_celroom.scss'
 import OtherPanda from '../OtherPlayer/OtherPanda';
+import { AuthContext } from '../../contexts/Auth/AuthContext';
 interface LobbyProps {
     isFocused: boolean
 }
@@ -23,6 +24,7 @@ const SalaCelina: React.FC<LobbyProps> = ({ isFocused }) => {
     const socket = io(import.meta.env.VITE_CELINA_API + '/celroom');
     const [disconect, setDisconect] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
+    const auth = useContext(AuthContext);
     const navigate = useNavigate();
     const handleMouseEnter = () => {
         setShowMenenobox(true);
@@ -46,7 +48,7 @@ const SalaCelina: React.FC<LobbyProps> = ({ isFocused }) => {
         setShowMenenobox(false);
     };
     useEffect(() => {
-
+        
         socket.on('custom_disconnect', (data: any) => {
             console.log('Disconnected from room:', data);
             // Remove o jogador desconectado da lista de jogadores
@@ -55,28 +57,33 @@ const SalaCelina: React.FC<LobbyProps> = ({ isFocused }) => {
 
         socket.on('update_player_position', (data: any) => {
             console.log('Received position from other client:', data);
-            // Verifique se o jogador já está na lista
-            const playerIndex = players.findIndex(player => player.id === data.userId);
-            if (playerIndex !== -1) {
-                // Atualize a posição do jogador na lista de jogadores
-                setPlayers((prevPlayers: Player[]) =>
-                    prevPlayers.map((player, index) =>
-                        index === playerIndex ? { ...player, newX: data.newX, newY: data.newY, direction: data.direction } : player
-                    )
-                );
-            } else {
-                // Se o jogador não estiver na lista, adicione-o
-                setPlayers((prevPlayers: Player[]) => [
-                    ...prevPlayers,
-                    { id: data.userId, direction: data.direction, username: '', x: data.newX, y: data.newY }
-                ]);
+            console.log(players)
+            if (data.userId !== auth.user?.id) {
+                // Verifique se o jogador já está na lista
+                const playerIndex = players.findIndex(player => player.id === data.userId);
+
+                if (playerIndex !== -1) {
+                    // Atualize a posição do jogador na lista de jogadores
+                    setPlayers((prevPlayers: Player[]) =>
+                        prevPlayers.map((player, index) =>
+                            index === playerIndex ? { ...player, x: data.newX, y: data.newY, direction: data.direction, username: data.username, id: data.userId } : player
+                        )
+                    );
+                } else {
+                    // Se o jogador não estiver na lista, adicione-o
+                    setPlayers((prevPlayers: Player[]) => [
+                        ...prevPlayers,
+                        { id: data.userId, direction: data.direction, username: data.username, x: data.newX, y: data.newY }
+                    ]);
+                }
             }
+
         });
         return () => {
             socket.off('custom_disconnect');
             socket.off('update_player_position');
         };
-    }, []);
+    }, [players, socket, auth]);
     return (
         <div className="celroom">
             {showMenenobox && <img src="menenobox.png" alt="meneno" className="menenobox" />}

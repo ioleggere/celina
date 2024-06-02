@@ -63,7 +63,7 @@ const Lobby: React.FC<LobbyProps> = ({ isFocused }) => {
             socket.off('custom_disconnect');
             socket.off('update_player_position');
         };
-    }, [players]);
+    }, [players, socket, auth]);
     const handleGoCelinaRoom = () => {
         setDisconect(true)
         setTimeout(() => {

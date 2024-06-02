@@ -6,7 +6,7 @@ import Chat from "../../components/Chat/Chat";
 function MakerRoom() {
     const auth = useContext(AuthContext);
     const handleLogout = async () => {
-        await auth.signout();
+        await auth.signout('');
         window.location.href = window.location.href;
     }
 

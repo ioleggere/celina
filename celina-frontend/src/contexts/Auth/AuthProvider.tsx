@@ -6,7 +6,7 @@ import io from 'socket.io-client';
 export const AuthProvider = ({ children }: { children: JSX.Element }) => {
     const [user, setUser] = useState<User | null>(null);
     const api = useApi();
-    
+
     useEffect(() => {
         validateToken();
     }, []);
@@ -41,12 +41,15 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
 
 
     const signout = (room: string) => {
-        const socket = io(import.meta.env.VITE_CELINA_API + '/' + room);
-        socket.emit('custom_disconnect', {
-            userId: user?.id,
-            username: user?.username,
-        });
-        socket.disconnect();
+        if (room !== '') {
+            const socket = io(import.meta.env.VITE_CELINA_API + '/' + room);
+            socket.emit('custom_disconnect', {
+                userId: user?.id,
+                username: user?.username,
+            });
+            socket.disconnect();
+        }
+
         api.signout();
         setUser(null);
         setToken('');

@@ -2,7 +2,6 @@ import { useContext } from "react";
 import { AuthContext } from "../../contexts/Auth/AuthContext";
 
 import './index.scss'
-import Chat from "../../components/Chat/Chat";
 import SubmitLevel from "../../components/SubmitLevel/SubmitLevel";
 import { useLocation } from "react-router-dom";
 function SubmitLevelRoom() {
@@ -10,7 +9,7 @@ function SubmitLevelRoom() {
     const { matrixData } = location.state;
     const auth = useContext(AuthContext);
     const handleLogout = async () => {
-        await auth.signout();
+        await auth.signout('');
         window.location.href = window.location.href;
     }
 

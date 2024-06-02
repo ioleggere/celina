@@ -6,7 +6,7 @@ import Levels from "../../components/Levels/Levels";
 function LevelsRoom() {
     const auth = useContext(AuthContext);
     const handleLogout = async () => {
-        await auth.signout();
+        await auth.signout('');
         window.location.href = window.location.href;
     }
 
