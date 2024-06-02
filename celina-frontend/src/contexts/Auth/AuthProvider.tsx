@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
 
     const signout = (room: string) => {
         const socket = io(import.meta.env.VITE_CELINA_API + '/' + room);
-        socket.emit('curstom_disconnect', {
+        socket.emit('custom_disconnect', {
             userId: user?.id,
             username: user?.username,
         });

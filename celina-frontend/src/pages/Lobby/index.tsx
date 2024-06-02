@@ -24,7 +24,7 @@ function LobbyRoom() {
                 <Lobby isFocused={!sceneOutFocus}  />
             </div>
             <div className="chat" onFocus={handleFocus} onBlur={handledesFocus}>
-                <Chat room='lobby'/>
+                <Chat/>
             </div>
             <div className="btn_logout">
                 <button onClick={handleLogout} >Logout</button>

@@ -128,12 +128,12 @@ class RoomNamespace(Namespace):
         # Emit a disconnect event to notify other clients in the room
         emit('disconnect', {'message': 'A user has disconnected'}, room=self.room)
 
-    def on_curstom_disconnect(self, data):
+    def on_custom_disconnect(self, data):
         print('Client disconnected from room:', self.room)
         if 'userId' in data and 'username' in data:
             user_id = data['userId']
             username = data['username']
-            emit('curstom_disconnect', {'userId': user_id, 'username': username}, room=self.room, include_self=False)
+            emit('custom_disconnect', {'userId': user_id, 'username': username}, room=self.room, include_self=False)
 
     def on_player_position(self, data):
         # Verifique se os dados contêm informações relevantes
@@ -146,13 +146,7 @@ class RoomNamespace(Namespace):
             print('Received player position from user', user_id, '(', username, '):', new_x, ',', new_y)
             # Envie os dados da posição para todos os outros clientes na mesma sala, exceto o remetente
             emit('update_player_position', {'userId': user_id, 'username': username, 'newX': new_x, 'newY': new_y, 'direction': direction}, room=self.room, include_self=False)
-    def on_send_message(self, data):
-        if 'username' in data and 'message' in data:
-            username = data['username']
-            message = data['message']
-            print(f'{username}: {message}')
-            # Broadcast the message to all clients in the chat namespace
-            emit('receive_message', {'username': username, 'message': message}, broadcast=True)
+
             
 socketio.on_namespace(RoomNamespace('/lobby'))
 
@@ -169,12 +163,12 @@ class CelNamespace(Namespace):
         # Emit a disconnect event to notify other clients in the room
         emit('disconnect', {'message': 'A user has disconnected'}, room=self.room)
 
-    def on_curstom_disconnect(self, data):
+    def on_custom_disconnect(self, data):
         print('Client disconnected from room:', self.room)
         if 'userId' in data and 'username' in data:
             user_id = data['userId']
             username = data['username']
-            emit('curstom_disconnect', {'userId': user_id, 'username': username}, room=self.room, include_self=False)
+            emit('custom_disconnect', {'userId': user_id, 'username': username}, room=self.room, include_self=False)
 
     def on_player_position(self, data):
         # Verifique se os dados contêm informações relevantes
@@ -187,13 +181,7 @@ class CelNamespace(Namespace):
             print('Received player position from user', user_id, '(', username, '):', new_x, ',', new_y)
             # Envie os dados da posição para todos os outros clientes na mesma sala, exceto o remetente
             emit('update_player_position', {'userId': user_id, 'username': username, 'newX': new_x, 'newY': new_y, 'direction': direction}, room=self.room, include_self=False)
-    def on_send_message(self, data):
-        if 'username' in data and 'message' in data:
-            username = data['username']
-            message = data['message']
-            print(f'{username}: {message}')
-            # Broadcast the message to all clients in the chat namespace
-            emit('receive_message', {'username': username, 'message': message}, broadcast=True)
+
 
 socketio.on_namespace(CelNamespace('/celroom'))
 

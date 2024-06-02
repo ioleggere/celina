@@ -24,7 +24,7 @@ function CelRoom() {
                 <SalaCelina isFocused={!sceneOutFocus}  />
             </div>
             <div className="chat" onFocus={handleFocus} onBlur={handledesFocus}>
-                <Chat room="celroom"/>
+                <Chat/>
             </div>
             <div className="btn_logout">
                 <button onClick={handleLogout} >Logout</button>

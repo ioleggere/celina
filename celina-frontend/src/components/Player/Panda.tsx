@@ -28,7 +28,7 @@ const Panda: React.FC<PandaProps> = ({ xsize, ysize, canMove, position, disconec
         });
 
         const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-            socket.emit('curstom_disconnect', {
+            socket.emit('custom_disconnect', {
                 userId: auth.user?.id,
                 username: auth.user?.username,
             });
@@ -36,7 +36,7 @@ const Panda: React.FC<PandaProps> = ({ xsize, ysize, canMove, position, disconec
         };
 
         if (disconect) {
-            socket.emit('curstom_disconnect', {
+            socket.emit('custom_disconnect', {
                 userId: auth.user?.id,
                 username: auth.user?.username,
             });
@@ -96,7 +96,7 @@ const Panda: React.FC<PandaProps> = ({ xsize, ysize, canMove, position, disconec
             window.removeEventListener('keydown', handleKeyPress);
             window.removeEventListener('keyup', handleKeyRelease);
         };
-    }, [playerPosition, isMoving, canMove, disconect, socket]);
+    }, [playerPosition, isMoving, canMove, disconect]);
     const handleDoubleClick = () => {
         setClickCount(clickCount + 1);
         if (clickCount === 1) {
