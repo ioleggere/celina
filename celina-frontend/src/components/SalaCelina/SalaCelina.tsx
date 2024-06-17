@@ -33,16 +33,38 @@ const SalaCelina: React.FC<LobbyProps> = ({ isFocused }) => {
         setShowPopup(!showPopup);
     };
     const goMaker = () => {
-        setDisconect(true)
-        navigate('/Maker')
+        socket.emit('custom_disconnect', {
+            userId: auth.user?.id,
+            username: auth.user?.username,
+        });
+        socket.disconnect(); // Certifique-se de desconectar o socket
+        setTimeout(() => {
+            navigate('/Maker')
+        }, 500);
+        
     }
     const goPlay = () =>{
-        setDisconect(true)
-        navigate('/Levels')
+        socket.emit('custom_disconnect', {
+            userId: auth.user?.id,
+            username: auth.user?.username,
+        });
+        socket.disconnect(); // Certifique-se de desconectar o socket
+        setTimeout(() => {
+            navigate('/Levels')
+        }, 500);
+
+        
     }
     const goLobby = () => {
-        setDisconect(true)
-        navigate('/Lobby')
+        socket.emit('custom_disconnect', {
+            userId: auth.user?.id,
+            username: auth.user?.username,
+        });
+        socket.disconnect(); // Certifique-se de desconectar o socket
+        setTimeout(() => {
+            navigate('/Lobby')
+        }, 500);
+        
     }
     const handleMouseLeave = () => {
         setShowMenenobox(false);

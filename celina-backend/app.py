@@ -149,41 +149,7 @@ class RoomNamespace(Namespace):
 
             
 socketio.on_namespace(RoomNamespace('/lobby'))
-
-#celroom
-
-class CelNamespace(Namespace):
-    def on_connect(self):
-        room = request.path.split('/')[-1]  # Extract the room name from the URL
-        self.room = room
-        print('Client connected to room:', room)
-
-    def on_disconnect(self):
-        print('Client disconnected from room:', self.room)
-        # Emit a disconnect event to notify other clients in the room
-        emit('disconnect', {'message': 'A user has disconnected'}, room=self.room)
-
-    def on_custom_disconnect(self, data):
-        print('Client disconnected from room:', self.room)
-        if 'userId' in data and 'username' in data:
-            user_id = data['userId']
-            username = data['username']
-            emit('custom_disconnect', {'userId': user_id, 'username': username}, room=self.room, include_self=False)
-
-    def on_player_position(self, data):
-        # Verifique se os dados contêm informações relevantes
-        if 'userId' in data and 'username' in data and 'newX' in data and 'newY' in data and 'direction' in data:
-            user_id = data['userId']
-            username = data['username']
-            new_x = data['newX']
-            new_y = data['newY']
-            direction = data['direction']
-            print('Received player position from user', user_id, '(', username, '):', new_x, ',', new_y)
-            # Envie os dados da posição para todos os outros clientes na mesma sala, exceto o remetente
-            emit('update_player_position', {'userId': user_id, 'username': username, 'newX': new_x, 'newY': new_y, 'direction': direction}, room=self.room, include_self=False)
-
-
-socketio.on_namespace(CelNamespace('/celroom'))
+socketio.on_namespace(RoomNamespace('/celroom'))
 
 class ChatNamespace(Namespace):
     def on_connect(self):

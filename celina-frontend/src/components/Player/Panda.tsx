@@ -36,10 +36,7 @@ const Panda: React.FC<PandaProps> = ({ xsize, ysize, canMove, position, disconec
         };
 
         if (disconect) {
-            socket.emit('custom_disconnect', {
-                userId: auth.user?.id,
-                username: auth.user?.username,
-            });
+            console.log("DISCONECTOU")
             socket.disconnect(); // Certifique-se de desconectar o socket
         }
 

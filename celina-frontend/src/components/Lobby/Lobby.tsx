@@ -36,8 +36,8 @@ const Lobby: React.FC<LobbyProps> = ({ isFocused }) => {
         });
 
         socket.on('update_player_position', (data: any) => {
-            console.log('Received position from other client:', data);
-            console.log(players)
+            //console.log('Received position from other client:', data);
+            //console.log(players.findIndex(player => player.id === 35))
             if (data.userId !== auth.user?.id) {
                 // Verifique se o jogador já está na lista
                 const playerIndex = players.findIndex(player => player.id === data.userId);
@@ -65,10 +65,14 @@ const Lobby: React.FC<LobbyProps> = ({ isFocused }) => {
         };
     }, [players, socket, auth]);
     const handleGoCelinaRoom = () => {
-        setDisconect(true)
+        socket.emit('custom_disconnect', {
+            userId: auth.user?.id,
+            username: auth.user?.username,
+        });
+        socket.disconnect(); // Certifique-se de desconectar o socket
         setTimeout(() => {
             navigate('/CelinaRoom');
-        }, 100);
+        }, 500);
     }
     return (
         <div className="lobby">
