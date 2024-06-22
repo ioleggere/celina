@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './index_playlevel.scss';
 import Matriz from '../Matrix/Matrix';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Slider, TextField } from '@mui/material';
 import { BlocklyWorkspace } from 'react-blockly';
 import Blockly from 'blockly';
@@ -13,6 +13,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 interface PlayLevelProps {
   matrixData: number[][];
 }
+
 
 const TOOL_BOX_CATEGORIES = `
 <xml xmlns="http://www.w3.org/1999/xhtml">
@@ -138,13 +139,18 @@ const TOOL_BOX_CATEGORIES = `
 
 
 const PlayLevel: React.FC<PlayLevelProps> = ({ matrixData }) => {
+  const location = useLocation();
+  const encodedMatrix = new URLSearchParams(location.search).get('matrix');
+  const matrixDatas = encodedMatrix ? JSON.parse(decodeURIComponent(encodedMatrix)) : [];
   const navigate = useNavigate();
   const [scale, setScale] = useState(1);
   const [xml, setXml] = useState<string>('<xml xmlns="http://www.w3.org/1999/xhtml"></xml>');
   const [isAnimating, setIsAnimating] = useState(false);
-  const [matrix, setMatrix] = useState(matrixData);
+  const [matrix, setMatrix] = useState(location.state?.matrix || matrixDatas);
   const [key, setKey] = useState(false);
   const [complete, setComplete] = useState(false);
+
+  
   const findStartPosition = (matrixData: number[][]) => {
     for (let i = 0; i < matrixData.length; i++) {
       for (let j = 0; j < matrixData[i].length; j++) {
@@ -156,7 +162,7 @@ const PlayLevel: React.FC<PlayLevelProps> = ({ matrixData }) => {
 
     return { x: -1, y: -1 };
   }
-  const initialPosition = findStartPosition(matrixData);
+  const initialPosition = findStartPosition(matrix);
   const [position, setPosition] = useState(initialPosition);
   const handleGoCelinaRoom = () => {
     navigate('/CelinaRoom');
@@ -363,6 +369,7 @@ const PlayLevel: React.FC<PlayLevelProps> = ({ matrixData }) => {
       <div className='btns'>
         <button className='run-btn' onClick={handleRunCode} disabled={isAnimating}>Run</button>
         <button className='leave-btn' onClick={handleGoCelinaRoom}>Voltar</button>
+  
       </div>
       <Dialog
         open={openPopup}
