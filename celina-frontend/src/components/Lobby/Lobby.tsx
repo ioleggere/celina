@@ -3,7 +3,7 @@ import './index_lobby.scss'
 import Panda from '../Player/Panda';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import io from 'socket.io-client';
+
 import OtherPanda from '../OtherPlayer/OtherPanda';
 import { AuthContext } from "../../contexts/Auth/AuthContext";
 interface Player {
@@ -15,12 +15,11 @@ interface Player {
 }
 interface LobbyProps {
     isFocused: boolean
+    socket: any
 }
-const Lobby: React.FC<LobbyProps> = ({ isFocused }) => {
+const Lobby: React.FC<LobbyProps> = ({ isFocused, socket }) => {
     const [players, setPlayers] = useState<Player[]>([]);
-    const socket = io(import.meta.env.VITE_CELINA_API + '/lobby');
     const [showPopup, setShowPopup] = useState(false);
-    const [disconect, setDisconect] = useState(false);
     const auth = useContext(AuthContext);
     const navigate = useNavigate();
     const togglePopup = () => {
@@ -85,7 +84,7 @@ const Lobby: React.FC<LobbyProps> = ({ isFocused }) => {
                     className="floor-image"
                     style={{ position: 'relative', top: 0, left: 0 }}
                 />
-                <Panda xsize={188} ysize={90} canMove={isFocused} position={{ x: 0, y: 0 }} disconect={disconect} room='lobby' />
+                <Panda xsize={188} ysize={90} canMove={isFocused} position={{ x: 0, y: 0 }} socket={socket} />
                 {players.map((player, index) => (
                     <OtherPanda
                         key={index} // Use the index from the map function

@@ -146,27 +146,15 @@ class RoomNamespace(Namespace):
             print('Received player position from user', user_id, '(', username, '):', new_x, ',', new_y)
             # Envie os dados da posição para todos os outros clientes na mesma sala, exceto o remetente
             emit('update_player_position', {'userId': user_id, 'username': username, 'newX': new_x, 'newY': new_y, 'direction': direction}, room=self.room, include_self=False)
-
-            
-socketio.on_namespace(RoomNamespace('/lobby'))
-socketio.on_namespace(RoomNamespace('/celroom'))
-
-class ChatNamespace(Namespace):
-    def on_connect(self):
-        room = request.path.split('/')[-1]  # Extract the room name from the URL
-        self.room = room
-        print(f'Client connected to chat room: {room}')
-
-    def on_disconnect(self):
-        print(f'Client disconnected from chat room: {self.room}')
-        emit('disconnect', {'message': 'A user has disconnected'}, room=self.room)
-
     def on_message(self, data):
         if data:
             print(f'Received message: {data} in room: {self.room}')
             emit('message', data, room=self.room)
 
-socketio.on_namespace(ChatNamespace('/chat'))
+socketio.on_namespace(RoomNamespace('/room'))
+socketio.on_namespace(RoomNamespace('/lobby'))
+socketio.on_namespace(RoomNamespace('/celroom'))
+    
 
 if __name__ == '__main__':
     socketio.run(app, debug=True, host='0.0.0.0')

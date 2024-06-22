@@ -1,23 +1,21 @@
 import { useContext, useEffect, useState } from "react";
 import './index.scss'
 import { AuthContext } from "../../contexts/Auth/AuthContext";
-import io from 'socket.io-client';
 interface PandaProps {
     xsize: number;
     ysize: number;
     canMove: boolean;
     position: { x: number, y: number }
-    disconect: boolean;
-    room: string;
+    socket: any
 }
 
-const Panda: React.FC<PandaProps> = ({ xsize, ysize, canMove, position, disconect, room }) => {
+const Panda: React.FC<PandaProps> = ({ xsize, ysize, canMove, position, socket }) => {
     const [playerPosition, setPlayerPosition] = useState({ x: position.x, y: position.y });
     const [playerDirection, setPlayerDirection] = useState('right');
     const [isMoving, setIsMoving] = useState(false);
     const [clickCount, setClickCount] = useState(0);
     const auth = useContext(AuthContext);
-    const socket = io(import.meta.env.VITE_CELINA_API + '/' + room);
+
     useEffect(() => {
         socket.emit('player_position', {
             userId: auth.user?.id,
@@ -35,10 +33,6 @@ const Panda: React.FC<PandaProps> = ({ xsize, ysize, canMove, position, disconec
             socket.disconnect(); // Certifique-se de desconectar o socket
         };
 
-        if (disconect) {
-            console.log("DISCONECTOU")
-            socket.disconnect(); // Certifique-se de desconectar o socket
-        }
 
         const handleKeyPress = (event: { key: any; }) => {
             const speed = 12;
@@ -93,7 +87,7 @@ const Panda: React.FC<PandaProps> = ({ xsize, ysize, canMove, position, disconec
             window.removeEventListener('keydown', handleKeyPress);
             window.removeEventListener('keyup', handleKeyRelease);
         };
-    }, [playerPosition, isMoving, canMove, disconect]);
+    }, [playerPosition, isMoving, canMove]);
     const handleDoubleClick = () => {
         setClickCount(clickCount + 1);
         if (clickCount === 1) {

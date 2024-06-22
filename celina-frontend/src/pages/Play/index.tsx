@@ -8,14 +8,12 @@ import PlayLevel from "../../components/PlayLevel/PlayLevel";
 
 function PlayRoom() {
     const location = useLocation();
-    //const { matrixData } = location.state;
     const searchParams = new URLSearchParams(location.search);
     const matrixParam = searchParams.get('matrix');
     const matrixData = matrixParam ? JSON.parse(decodeURIComponent(matrixParam)) : null;
-    console.log("VIXXXX " + matrixData)
     const auth = useContext(AuthContext);
     const handleLogout = async () => {
-        await auth.signout('');
+        await auth.signout();
         window.location.href = window.location.href;
     }
 
@@ -25,9 +23,9 @@ function PlayRoom() {
             <div className="play-component">
                 <PlayLevel matrixData={matrixData}/>
             </div>
-            <div className="chat-play">
+            {/* <div className="chat-play">
                 <Chat/>
-            </div>
+            </div> */}
             <div className="btn_logout">
                 <button onClick={handleLogout} >Logout</button>
             </div>

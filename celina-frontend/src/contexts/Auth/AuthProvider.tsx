@@ -40,15 +40,8 @@ export const AuthProvider = ({ children }: { children: JSX.Element }) => {
     }
 
 
-    const signout = (room: string) => {
-        if (room !== '') {
-            const socket = io(import.meta.env.VITE_CELINA_API + '/' + room);
-            socket.emit('custom_disconnect', {
-                userId: user?.id,
-                username: user?.username,
-            });
-            socket.disconnect();
-        }
+    const signout = () => {
+        
 
         api.signout();
         setUser(null);

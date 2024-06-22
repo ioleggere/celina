@@ -289,6 +289,7 @@ const PlayLevel: React.FC<PlayLevelProps> = ({ matrixData }) => {
     await updateMatrixAsync(workspace, matrix, setMatrix, key, setKey, complete, setComplete, position, setPosition, completedLevel);
     setIsAnimating(false);
   };
+  
   useEffect(() => {
     if (key) {
       console.log('Key updated:', key);

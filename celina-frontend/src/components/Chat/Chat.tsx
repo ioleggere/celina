@@ -1,11 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import './index.scss'
 import { AuthContext } from '../../contexts/Auth/AuthContext';
-import io from 'socket.io-client';
-const Chat: React.FC = () => {
+interface ChatProps {
+  socket: any
+}
+
+const Chat: React.FC<ChatProps> = ({ socket }) => {
   const [messages, setMessages] = useState<string[]>([]);
   const [input, setInput] = useState('');
-  const socket = io(import.meta.env.VITE_CELINA_API + '/chat');
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       socket.disconnect(); // Certifique-se de desconectar o socket

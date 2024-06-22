@@ -6,7 +6,7 @@ import Chat from "../../components/Chat/Chat";
 function MakerRoom() {
     const auth = useContext(AuthContext);
     const handleLogout = async () => {
-        await auth.signout('');
+        await auth.signout();
         window.location.href = window.location.href;
     }
 
@@ -16,9 +16,9 @@ function MakerRoom() {
             <div className="maker-game">
                 <Maker/>
             </div>
-            <div className="chat">
+            {/* <div className="chat">
                 <Chat />
-            </div>
+            </div> */}
             <div className="btn_logout">
                 <button onClick={handleLogout} >Logout</button>
             </div>

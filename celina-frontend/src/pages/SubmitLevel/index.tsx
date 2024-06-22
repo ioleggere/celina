@@ -9,7 +9,7 @@ function SubmitLevelRoom() {
     const { matrixData } = location.state;
     const auth = useContext(AuthContext);
     const handleLogout = async () => {
-        await auth.signout('');
+        await auth.signout();
         window.location.href = window.location.href;
     }
 

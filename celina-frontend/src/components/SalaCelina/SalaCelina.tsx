@@ -3,12 +3,13 @@
 import Panda from '../Player/Panda';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import io from 'socket.io-client';
+
 import './index_celroom.scss'
 import OtherPanda from '../OtherPlayer/OtherPanda';
 import { AuthContext } from '../../contexts/Auth/AuthContext';
 interface LobbyProps {
     isFocused: boolean
+    socket: any
 }
 
 interface Player {
@@ -18,11 +19,10 @@ interface Player {
     y: number;
     direction: string;
 }
-const SalaCelina: React.FC<LobbyProps> = ({ isFocused }) => {
+const SalaCelina: React.FC<LobbyProps> = ({ isFocused, socket }) => {
     const [showMenenobox, setShowMenenobox] = useState(false);
     const [players, setPlayers] = useState<Player[]>([]);
-    const socket = io(import.meta.env.VITE_CELINA_API + '/celroom');
-    const [disconect, setDisconect] = useState(false);
+
     const [showPopup, setShowPopup] = useState(false);
     const auth = useContext(AuthContext);
     const navigate = useNavigate();
@@ -126,7 +126,7 @@ const SalaCelina: React.FC<LobbyProps> = ({ isFocused }) => {
                     style={{ position: 'relative', top: 0, left: 0 }}
                 />
                 <div className='boudingboxplayers'>
-                    <Panda xsize={170} ysize={59} canMove={isFocused} disconect={disconect} position={{x: 0, y: 0}} room='celroom'/>
+                    <Panda xsize={170} ysize={59} canMove={isFocused} position={{x: 0, y: 0}} socket={socket}/>
                     {players.map(player => (
                     <OtherPanda
                         key={player.id}
