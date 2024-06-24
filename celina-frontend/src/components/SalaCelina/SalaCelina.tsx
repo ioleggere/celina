@@ -22,7 +22,7 @@ interface Player {
 const SalaCelina: React.FC<LobbyProps> = ({ isFocused, socket }) => {
     const [showMenenobox, setShowMenenobox] = useState(false);
     const [players, setPlayers] = useState<Player[]>([]);
-
+    const [newPlayer, setnewPlayer] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
     const auth = useContext(AuthContext);
     const navigate = useNavigate();
@@ -86,11 +86,13 @@ const SalaCelina: React.FC<LobbyProps> = ({ isFocused, socket }) => {
 
                 if (playerIndex !== -1) {
                     // Atualize a posição do jogador na lista de jogadores
+                    
                     setPlayers((prevPlayers: Player[]) =>
                         prevPlayers.map((player, index) =>
                             index === playerIndex ? { ...player, x: data.newX, y: data.newY, direction: data.direction, username: data.username, id: data.userId } : player
                         )
                     );
+                    setnewPlayer(true);
                 } else {
                     // Se o jogador não estiver na lista, adicione-o
                     setPlayers((prevPlayers: Player[]) => [
@@ -106,6 +108,13 @@ const SalaCelina: React.FC<LobbyProps> = ({ isFocused, socket }) => {
             socket.off('update_player_position');
         };
     }, [players, socket, auth]);
+    useEffect(() => {
+        if (newPlayer) {
+            console.log("vito", newPlayer);
+            setTimeout(() => setnewPlayer(false), 100);
+            console.log("vito", newPlayer);
+        }
+    }, [newPlayer]);
     return (
         <div className="celroom">
             {showMenenobox && <img src="menenobox.png" alt="meneno" className="menenobox" />}
@@ -126,7 +135,7 @@ const SalaCelina: React.FC<LobbyProps> = ({ isFocused, socket }) => {
                     style={{ position: 'relative', top: 0, left: 0 }}
                 />
                 <div className='boudingboxplayers'>
-                    <Panda xsize={170} ysize={59} canMove={isFocused} position={{x: 0, y: 0}} socket={socket}/>
+                    <Panda xsize={170} ysize={59} canMove={isFocused} position={{x: 0, y: 0}} socket={socket} newPlayer={newPlayer}/>
                     {players.map(player => (
                     <OtherPanda
                         key={player.id}

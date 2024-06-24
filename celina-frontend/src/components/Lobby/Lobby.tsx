@@ -20,6 +20,7 @@ interface LobbyProps {
 const Lobby: React.FC<LobbyProps> = ({ isFocused, socket }) => {
     const [players, setPlayers] = useState<Player[]>([]);
     const [showPopup, setShowPopup] = useState(false);
+    const [newPlayer, setnewPlayer] = useState(false);
     const auth = useContext(AuthContext);
     const navigate = useNavigate();
     const togglePopup = () => {
@@ -43,11 +44,13 @@ const Lobby: React.FC<LobbyProps> = ({ isFocused, socket }) => {
 
                 if (playerIndex !== -1) {
                     // Atualize a posição do jogador na lista de jogadores
+                    
                     setPlayers((prevPlayers: Player[]) =>
                         prevPlayers.map((player, index) =>
                             index === playerIndex ? { ...player, x: data.newX, y: data.newY, direction: data.direction, username: data.username, id: data.userId } : player
                         )
                     );
+                    setnewPlayer(true)
                 } else {
                     // Se o jogador não estiver na lista, adicione-o
                     setPlayers((prevPlayers: Player[]) => [
@@ -63,6 +66,14 @@ const Lobby: React.FC<LobbyProps> = ({ isFocused, socket }) => {
             socket.off('update_player_position');
         };
     }, [players, socket, auth]);
+
+    useEffect(() => {
+        if (newPlayer) {
+            console.log("vito", newPlayer);
+            setTimeout(() => setnewPlayer(false), 100);
+            console.log("vito", newPlayer);
+        }
+    }, [newPlayer]);
     const handleGoCelinaRoom = () => {
         socket.emit('custom_disconnect', {
             userId: auth.user?.id,
@@ -84,7 +95,7 @@ const Lobby: React.FC<LobbyProps> = ({ isFocused, socket }) => {
                     className="floor-image"
                     style={{ position: 'relative', top: 0, left: 0 }}
                 />
-                <Panda xsize={188} ysize={90} canMove={isFocused} position={{ x: 0, y: 0 }} socket={socket} />
+                <Panda xsize={188} ysize={90} canMove={isFocused} position={{ x: 0, y: 0 }} socket={socket} newPlayer={newPlayer} />
                 {players.map((player, index) => (
                     <OtherPanda
                         key={index} // Use the index from the map function

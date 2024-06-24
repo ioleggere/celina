@@ -117,7 +117,7 @@ function Login() {
                     </div>
                     <div className="login-actions">
                         <button type="button" className="register-button" onClick={performRegister}>
-                            Register
+                            Registrar
                         </button>
                     </div>
                 </form>

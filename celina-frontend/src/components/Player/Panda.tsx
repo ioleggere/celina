@@ -6,10 +6,11 @@ interface PandaProps {
     ysize: number;
     canMove: boolean;
     position: { x: number, y: number }
-    socket: any
+    socket: any;
+    newPlayer: boolean;
 }
 
-const Panda: React.FC<PandaProps> = ({ xsize, ysize, canMove, position, socket }) => {
+const Panda: React.FC<PandaProps> = ({ xsize, ysize, canMove, position, socket, newPlayer }) => {
     const [playerPosition, setPlayerPosition] = useState({ x: position.x, y: position.y });
     const [playerDirection, setPlayerDirection] = useState('right');
     const [isMoving, setIsMoving] = useState(false);
@@ -17,6 +18,15 @@ const Panda: React.FC<PandaProps> = ({ xsize, ysize, canMove, position, socket }
     const auth = useContext(AuthContext);
 
     useEffect(() => {
+        if (newPlayer){
+            socket.emit('player_position', {
+                userId: auth.user?.id,
+                username: auth.user?.username,
+                newX: playerPosition.x,
+                newY: playerPosition.y,
+                direction: playerDirection
+            });
+        }
         socket.emit('player_position', {
             userId: auth.user?.id,
             username: auth.user?.username,
@@ -87,7 +97,7 @@ const Panda: React.FC<PandaProps> = ({ xsize, ysize, canMove, position, socket }
             window.removeEventListener('keydown', handleKeyPress);
             window.removeEventListener('keyup', handleKeyRelease);
         };
-    }, [playerPosition, isMoving, canMove]);
+    }, [playerPosition, isMoving, canMove, newPlayer]);
     const handleDoubleClick = () => {
         setClickCount(clickCount + 1);
         if (clickCount === 1) {

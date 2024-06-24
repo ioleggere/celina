@@ -1,25 +1,29 @@
 .lobby-page {
     display: flex;
     flex-direction: column;
-    width: 1280px;
-    scale: 0.9;
+    width: 100%; /* Use 100% width to make it responsive */
+    height: 100vh; /* Full viewport height to ensure it covers the screen */
+
     .lobby-game {
-        position: absolute;
-        top: 50%;
-        left: 1;
-        transform: translateY(-50%);
+        position: relative; /* Changed to relative for better control */
+        flex: 1; /* Flex grow to take available space */
+        display: flex;
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
     }
 
     .btn_logout {
         position: absolute;
-        top: 460px;
-        right: 0;
+        top: 1rem;
+        right: 1rem;
         height: 40px;
     }
+
     .chat {
         position: absolute;
-        top:50%;
-        right: 0;
-        transform: translateY(-50%);
+        bottom: 1rem;
+        right: 1rem;
+        max-height: 50%; /* Restrict height to prevent overflow */
+        overflow-y: auto; /* Allow scrolling if content overflows */
     }
 }
