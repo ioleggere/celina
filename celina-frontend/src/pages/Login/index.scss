@@ -69,11 +69,17 @@ body {
         background-color: #99A6A0;
         border-radius: 63px;
     }
+    .login-button:hover {
+        background-color: #B3C1BB; 
+    }
     .register-button{
         width: 152px;
         height: 44px;
         background-color: #4E4E4E;
         border-radius: 63px;
+    }
+    .register-button:hover {
+        background-color: #707070; 
     }
 }
 

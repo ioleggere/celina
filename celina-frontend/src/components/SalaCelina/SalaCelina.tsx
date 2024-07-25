@@ -43,6 +43,17 @@ const SalaCelina: React.FC<LobbyProps> = ({ isFocused, socket }) => {
         }, 500);
         
     }
+    const goTutorial = () => {
+        socket.emit('custom_disconnect', {
+            userId: auth.user?.id,
+            username: auth.user?.username,
+        });
+        socket.disconnect(); // Certifique-se de desconectar o socket
+        setTimeout(() => {
+            navigate('/Tutorial')
+        }, 500);
+        
+    }
     const goPlay = () =>{
         socket.emit('custom_disconnect', {
             userId: auth.user?.id,
@@ -125,6 +136,7 @@ const SalaCelina: React.FC<LobbyProps> = ({ isFocused, socket }) => {
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
                 onClick={togglePopup}
+                title='Clique para navegar entre as possibilidades!'
             />
             <div className="floor">
 
@@ -152,8 +164,8 @@ const SalaCelina: React.FC<LobbyProps> = ({ isFocused, socket }) => {
                     <div className="popup-content-celroom">
                         <p className="popup-text-celroom">
                             O que deseja?
-
                         </p>
+                        <button className="popup-btn" onClick={goTutorial}>Tutorial</button>
                         <button className="popup-btn" onClick={goMaker}>Criar Nivel</button>
                         <button className="popup-btn" onClick={goPlay}>Jogar</button>
                         <button className="popup-btn" onClick={goLobby}>Lobby</button>

@@ -15,14 +15,11 @@ function SubmitLevelRoom() {
 
     return (
         <div className="submit-page">
-            
-            <div className="submit-component">
-                <SubmitLevel matrixData={matrixData}/>
-            </div>
 
-            <div className="btn_logout">
-                <button onClick={handleLogout} >Logout</button>
+            <div className="submit-component">
+                <SubmitLevel matrixData={matrixData} />
             </div>
+            <button className="btn_logout" onClick={handleLogout} >Logout</button>
         </div>
 
     )

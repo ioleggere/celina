@@ -12,9 +12,19 @@
 
     .btn_logout {
         position: absolute;
-        top: 0px;
+        top: 0;
         right: 0;
         height: 40px;
+        background-color: #4E4E4E;
+        border-radius: 63px;
+        color: white; 
+        border: none;
+        cursor: pointer; 
+        margin: 10px; 
+    }
+
+    .btn_logout:hover {
+        background-color: #707070;
     }
     .chat {
         position: absolute;

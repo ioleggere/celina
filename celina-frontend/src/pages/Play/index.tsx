@@ -19,16 +19,14 @@ function PlayRoom() {
 
     return (
         <div className="play-page">
-            
+
             <div className="play-component">
-                <PlayLevel matrixData={matrixData}/>
+                <PlayLevel matrixData={matrixData} />
             </div>
             {/* <div className="chat-play">
                 <Chat/>
             </div> */}
-            <div className="btn_logout">
-                <button onClick={handleLogout} >Logout</button>
-            </div>
+            <button className="btn_logout" onClick={handleLogout} >Logout</button>
         </div>
 
     )

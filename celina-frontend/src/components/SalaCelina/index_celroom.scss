@@ -70,9 +70,14 @@
     }
 
     .popup-btn {
-        font-size: 7px; /* Tamanho da fonte menor */
-        width: 40px;
+        font-size: 4px; 
+        width: 30%px;
         position: relative;
-        margin-bottom: 3px;
+        margin-bottom: 2px;
+        background-color: #4E4E4E;
+        border-radius: 63px;
+    }
+    .popup-btn:hover {
+        background-color: #707070;
     }
 }

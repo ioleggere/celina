@@ -1,54 +1,81 @@
 import React, { useContext, useEffect, useState } from 'react';
-import './index.scss'
+import './index.scss';
+import classNames from 'classnames';
 import { AuthContext } from '../../contexts/Auth/AuthContext';
+
 interface ChatProps {
-  socket: any
+  socket: any;
 }
 
 const Chat: React.FC<ChatProps> = ({ socket }) => {
   const [messages, setMessages] = useState<string[]>([]);
   const [input, setInput] = useState('');
+  const [minimized, setMinimized] = useState(false);
+  const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
+
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       socket.disconnect(); // Certifique-se de desconectar o socket
-  };
+    };
+
     socket.on('message', (data: any) => {
       setMessages((prevMessages) => [...prevMessages, data]);
+      if (minimized) {
+        setHasUnreadMessages(true);
+      }
     });
-    window.addEventListener('beforeunload', handleBeforeUnload);
-  return () => {
-    socket.off('message');
-  };
-  
-}, [socket, messages]);
 
-const handleMessageSubmit = (e: React.FormEvent) => {
-  e.preventDefault();
-  if (socket) {
-    socket.emit('message', (auth.user?.username + ": " + input));
-    setInput('');
-  }
-};
-const auth = useContext(AuthContext);
-return (
-  <div className='chat'>
-    <h1>CHAT</h1>
-    <div className='mensages'>
-      {messages.map((message, index) => (
-        <div key={index}>{message}</div>
-      ))}
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      socket.off('message');
+    };
+  }, [socket, minimized]);
+
+  const handleMessageSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (socket) {
+      socket.emit('message', `${auth.user?.username}: ${input}`);
+      setInput('');
+    }
+  };
+
+  const toggleMinimized = () => {
+    setMinimized((prevMinimized) => !prevMinimized);
+    if (hasUnreadMessages) {
+      setHasUnreadMessages(false); // Limpar a flag ao maximizar
+    }
+  };
+
+  const auth = useContext(AuthContext);
+
+  return (
+    <div className={classNames('chat-component', { minimized, hasUnread: hasUnreadMessages })}>
+      {!minimized && (
+        <>
+          <span className='title-chat'>CHAT</span>
+          <div className='messages'>
+            {messages.map((message, index) => (
+              <div key={index}>{message}</div>
+            ))}
+          </div>
+          <form onSubmit={handleMessageSubmit} className='message_form'>
+            <input
+              type="text"
+              value={input}
+              className='input'
+              onChange={(e) => setInput(e.target.value)}
+            />
+            <button type="submit" className='btn_send'>{'>'}</button>
+          </form>
+        </>
+      )}
+      <button onClick={toggleMinimized} className='btn_toggle'>
+        {minimized ? 'Chat' : 'Minimizar'}
+      </button>
     </div>
-    <form onSubmit={handleMessageSubmit} className='mensage_form'>
-      <input
-        type="text"
-        value={input}
-        className='input'
-        onChange={(e) => setInput(e.target.value)}
-      />
-      <button type="submit" className='btn_send'>Enviar</button>
-    </form>
-  </div>
-);
+  );
 };
 
 export default Chat;
+

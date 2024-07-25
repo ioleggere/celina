@@ -1,0 +1,42 @@
+.submiter {
+    display: flex;
+    flex-direction: row;
+    width: 1200px;
+}
+
+.box-matrix {
+    flex-direction: column;
+}
+
+.matrix-container-submiter {
+    width: 600px;
+    height: 80%;
+}
+
+.blockly-container {
+    height: 90%;
+}
+.run-btn{
+    margin: 1cap;
+}
+.leave-btn{
+    margin: 1cap;
+}
+@media (max-width: 1200px) {
+    .submiter {
+        flex-direction: column;
+        width: 500px;
+    }
+
+    .matrix-container-submiter {
+        width: 100%;
+        /* Ocupa 100% da largura disponível */
+        height: 90%;
+        /* Ocupa 50% da altura disponível */
+    }
+
+    .blockly-container {
+        height: 50%;
+        /* Ocupa 50% da altura disponível */
+    }
+}

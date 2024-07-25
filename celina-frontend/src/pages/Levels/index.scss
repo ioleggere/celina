@@ -1,26 +1,37 @@
 .levels-page {
     display: flex;
     flex-direction: column;
-    width: 1280px;
-    scale: 0.9;
+    width: 100%;
+    height: 100vh;
+
     .levels-component {
-        position: absolute;
-        top: 50%;
-        left: 1;
-        transform: translateY(-50%);
+        position: relative; /* Changed to relative for better control */
+        flex: 1; /* Flex grow to take available space */
+        display: flex;
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
     }
 
-    .btn_logout-levels {
+    .btn_logout {
         position: absolute;
-        bottom: 470px; 
-        right: 0; 
+        top: 0;
+        right: 0;
         height: 40px;
-        z-index: 1;
+        background-color: #4E4E4E;
+        border-radius: 63px;
+        color: white; 
+        border: none;
+        cursor: pointer; 
+        margin: 10px; 
+    }
+
+    .btn_logout:hover {
+        background-color: #707070;
     }
 
     .chat {
         position: absolute;
-        top:50%;
+        top: 50%;
         right: 0;
         transform: translateY(-50%);
     }

@@ -11,6 +11,7 @@ import MakerRoom from './pages/Maker';
 import SubmitLevelRoom from './pages/SubmitLevel';
 import LevelsRoom from './pages/Levels';
 import PlayRoom from './pages/Play';
+import Tutorial from './pages/Tutorial';
 
 function App() {
   const { user, validateToken } = useContext(AuthContext);
@@ -44,6 +45,7 @@ function App() {
         <Route path='/SubmitLevel' element={<RequireAuth><SubmitLevelRoom /></RequireAuth>} />
         <Route path='/Levels' element={<RequireAuth><LevelsRoom /></RequireAuth>} />
         <Route path='/PlayLevel' element={<RequireAuth><PlayRoom /></RequireAuth>} />
+        <Route path='/Tutorial' element={<RequireAuth><Tutorial /></RequireAuth>} />
       </Routes>
     </>
   )

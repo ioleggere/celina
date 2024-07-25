@@ -1,20 +1,27 @@
 .play-page {
     display: flex;
     flex-direction: column;
-    width: 1280px;
-    scale: 0.9;
+    height: 100vh;  /* Use toda a altura da tela */
     .play-component {
-        position: absolute;
-        top: 50%;
-        left: 1;
-        transform: translateY(-50%);
+        flex: 1;  /* Permite que o PlayLevel ocupe o espaço restante */
+        display: flex;
     }
 
     .btn_logout {
         position: absolute;
-        top: 0px;
+        top: 0;
         right: 0;
         height: 40px;
+        background-color: #4E4E4E;
+        border-radius: 63px;
+        color: white;
+        border: none;
+        cursor: pointer;
+        margin: 10px;
+    }
+
+    .btn_logout:hover {
+        background-color: #707070;
     }
     .chat-play {
         position: absolute;

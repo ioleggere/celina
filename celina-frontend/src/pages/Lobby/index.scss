@@ -10,20 +10,30 @@
         display: flex;
         justify-content: center; /* Center horizontally */
         align-items: center; /* Center vertically */
+
     }
 
     .btn_logout {
         position: absolute;
-        top: 1rem;
-        right: 1rem;
+        top: 0;
+        right: 0;
         height: 40px;
+        background-color: #4E4E4E;
+        border-radius: 63px;
+        color: white; 
+        border: none;
+        cursor: pointer; 
+        margin: 10px; 
+    }
+
+    .btn_logout:hover {
+        background-color: #707070;
     }
 
     .chat {
         position: absolute;
         bottom: 1rem;
         right: 1rem;
-        max-height: 50%; /* Restrict height to prevent overflow */
-        overflow-y: auto; /* Allow scrolling if content overflows */
+        max-height: 50%; 
     }
 }

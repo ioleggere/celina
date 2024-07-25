@@ -28,7 +28,7 @@ const Lobby: React.FC<LobbyProps> = ({ isFocused, socket }) => {
     };
 
     useEffect(() => {
-        
+
         socket.on('custom_disconnect', (data: any) => {
             console.log('Disconnected from room:', data);
             // Remove o jogador desconectado da lista de jogadores
@@ -44,7 +44,7 @@ const Lobby: React.FC<LobbyProps> = ({ isFocused, socket }) => {
 
                 if (playerIndex !== -1) {
                     // Atualize a posição do jogador na lista de jogadores
-                    
+
                     setPlayers((prevPlayers: Player[]) =>
                         prevPlayers.map((player, index) =>
                             index === playerIndex ? { ...player, x: data.newX, y: data.newY, direction: data.direction, username: data.username, id: data.userId } : player
@@ -85,9 +85,12 @@ const Lobby: React.FC<LobbyProps> = ({ isFocused, socket }) => {
         }, 500);
     }
     return (
-        <div className="lobby">
-            <img src="celina-room-outside.png" alt="outside" className="cel-outside" onClick={handleGoCelinaRoom} />
 
+        <div className="lobby">
+            <div className="cel-outside" onClick={handleGoCelinaRoom} data-tip="Clique para ir para a sala de Celina!">
+                <span className="tooltip">Clique para ir para a sala de Celina!</span>
+                <img src="celina-room-outside.png" className="cel-out-img"alt="outside" />
+            </div>
             <div className="floor">
                 <img
                     src="lobby-floor.png"

@@ -129,7 +129,7 @@ const TOOL_BOX_CATEGORIES = `
   </category>
   <category name="Variables" colour="#A65C81" custom="VARIABLE"></category>
   <category name="Functions" colour="#9A5CA6" custom="PROCEDURE"></category>
-  <category name="Custom Blocks" colour="#FF6680">
+  <category name="Move Player" colour="#FF6680">
     <block type="andar"></block>
   </category>
 </xml>
@@ -150,7 +150,7 @@ const PlayLevel: React.FC<PlayLevelProps> = ({ matrixData }) => {
   const [key, setKey] = useState(false);
   const [complete, setComplete] = useState(false);
 
-  
+
   const findStartPosition = (matrixData: number[][]) => {
     for (let i = 0; i < matrixData.length; i++) {
       for (let j = 0; j < matrixData[i].length; j++) {
@@ -295,7 +295,7 @@ const PlayLevel: React.FC<PlayLevelProps> = ({ matrixData }) => {
     await updateMatrixAsync(workspace, matrix, setMatrix, key, setKey, complete, setComplete, position, setPosition, completedLevel);
     setIsAnimating(false);
   };
-  
+
   useEffect(() => {
     if (key) {
       console.log('Key updated:', key);
@@ -322,25 +322,29 @@ const PlayLevel: React.FC<PlayLevelProps> = ({ matrixData }) => {
 
   return (
     <div className="submiter">
-      <div className='matrix-container-submiter'>
-        <div className='matrix-submiter' style={{ transform: `scale(${scale})`, transformOrigin: 'top left', width: matrix[0].length * 30, height: matrix.length * 30 }}>
-          <Matriz matriz={matrix} onCellClick={handleCellClick} />
+      <div className='box-matrix'>
+        <div className='matrix-container-submiter'>
+          <div className='matrix-submiter' style={{ transform: `scale(${scale})`, transformOrigin: 'top left', width: matrix[0].length * 30, height: matrix.length * 30 }}>
+            <Matriz matriz={matrix} onCellClick={handleCellClick} />
+          </div>
         </div>
+        <Slider
+          value={scale * 10}
+          className='sliderzoom'
+          onChange={(event, newValue) => {
+            if (typeof newValue === 'number') {
+              setScale(newValue / 10);
+            }
+          }}
+          aria-labelledby="continuous-slider"
+          step={0.1}
+          min={1}
+          max={10}
+          valueLabelDisplay="auto"
+        />
       </div>
-      <Slider
-        value={scale * 10}
-        className='sliderzoom'
-        onChange={(event, newValue) => {
-          if (typeof newValue === 'number') {
-            setScale(newValue / 10);
-          }
-        }}
-        aria-labelledby="continuous-slider"
-        step={0.1}
-        min={1}
-        max={10}
-        valueLabelDisplay="auto"
-      />
+
+
       <div className='blockly-container'>
         <BlocklyWorkspace
           toolboxConfiguration={TOOL_BOX_CATEGORIES}
@@ -357,8 +361,8 @@ const PlayLevel: React.FC<PlayLevelProps> = ({ matrixData }) => {
             zoom: {
               controls: true,
               wheel: true,
-              startScale: 0.5,
-              maxScale: 3,
+              startScale: 1.5,
+              maxScale: 4,
               minScale: 0.3,
               scaleSpeed: 1.2
             },
@@ -369,7 +373,7 @@ const PlayLevel: React.FC<PlayLevelProps> = ({ matrixData }) => {
       <div className='btns'>
         <button className='run-btn' onClick={handleRunCode} disabled={isAnimating}>Run</button>
         <button className='leave-btn' onClick={handleGoCelinaRoom}>Voltar</button>
-  
+
       </div>
       <Dialog
         open={openPopup}
@@ -380,7 +384,7 @@ const PlayLevel: React.FC<PlayLevelProps> = ({ matrixData }) => {
         <DialogTitle id="complete-popup">{"Level Completo"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="complete-description">
-            Conseguiu completar ein paizao!
+            Conseguiu completar!
           </DialogContentText>
         </DialogContent>
         <DialogActions>

@@ -12,16 +12,14 @@ function MakerRoom() {
 
     return (
         <div className="maker-page">
-            
+
             <div className="maker-game">
-                <Maker/>
+                <Maker />
             </div>
             {/* <div className="chat">
                 <Chat />
             </div> */}
-            <div className="btn_logout">
-                <button onClick={handleLogout} >Logout</button>
-            </div>
+            <button className="btn_logout" onClick={handleLogout} >Logout</button>
         </div>
 
     )
