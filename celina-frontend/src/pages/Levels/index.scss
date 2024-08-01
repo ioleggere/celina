@@ -5,11 +5,56 @@
     height: 100vh;
 
     .levels-component {
-        position: relative; /* Changed to relative for better control */
-        flex: 1; /* Flex grow to take available space */
+        position: relative;
+        flex: 1; 
         display: flex;
-        justify-content: center; /* Center horizontally */
-        align-items: center; /* Center vertically */
+        justify-content: flex-start; 
+        transform: scaleX(1.3);
+        
+        align-items: center;
+        @media (max-height: 900px) {
+            scale: 0.9; 
+        }
+
+        @media (max-height: 800px) {
+            scale: 0.8; 
+        }
+
+        @media (max-height: 700px) {
+            scale: 0.7;
+        }
+
+        @media (max-height: 600px) {
+            scale: 0.6; 
+        }
+
+        @media (max-height: 500px) {
+            scale: 0.5;
+        }
+        @media (max-width: 1200px) {
+            scale: 0.9; 
+            transform: translateX(0%);
+        }
+    
+        @media (max-width: 1000px) {
+            scale: 0.8; 
+            transform: translateX(0%);
+        }
+    
+        @media (max-width: 800px) {
+            scale: 0.7; 
+            transform: translateX(0%);
+        }
+    
+        @media (max-width: 600px) {
+            scale: 0.6; 
+            transform: translateX(0%);
+        }
+    
+        @media (max-width: 400px) {
+            scale: 0.5; 
+            transform: translateX(0%);
+        }
     }
 
     .btn_logout {

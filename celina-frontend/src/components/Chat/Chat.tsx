@@ -70,9 +70,11 @@ const Chat: React.FC<ChatProps> = ({ socket }) => {
           </form>
         </>
       )}
-      <button onClick={toggleMinimized} className='btn_toggle'>
+      <div className="btn_toggle-container">
+      <button onClick={toggleMinimized}  className={classNames('btn_toggle', { minimized })}>
         {minimized ? 'Chat' : 'Minimizar'}
       </button>
+    </div>
     </div>
   );
 };

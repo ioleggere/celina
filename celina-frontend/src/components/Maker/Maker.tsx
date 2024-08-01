@@ -130,7 +130,7 @@ function Maker() {
     const matrixHeight = matrixData.length * 30; // Calcula a altura da matriz
 
     return (
-        <div className="lobby">
+        <div className="maker-cmp">
             <div className='matrix-container'>
                 <div className='matrix' style={{ transform: `scale(${scale})`, transformOrigin: 'top left', width: matrixWidth, height: matrixHeight }}>
                     <Matriz matriz={matrixData} onCellClick={handleCellClick} />

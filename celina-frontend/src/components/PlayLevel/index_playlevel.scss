@@ -7,7 +7,6 @@
 .box-matrix {
     flex-direction: column;
 }
-
 .matrix-container-submiter {
     width: 600px;
     height: 80%;
@@ -17,10 +16,20 @@
     height: 90%;
 }
 .run-btn{
+    background-color: #bcf590;
+    border-radius: 63px;
     margin: 1cap;
 }
+.run-btn:hover {
+    background-color: #dcf4ca;
+}
 .leave-btn{
+    background-color: #4E4E4E;
+    border-radius: 63px;
     margin: 1cap;
+}
+.leave-btn:hover {
+    background-color: #707070;
 }
 @media (max-width: 1200px) {
     .submiter {
