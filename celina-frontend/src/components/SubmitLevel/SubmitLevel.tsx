@@ -296,11 +296,8 @@ const SubmitLevel: React.FC<SubmitProps> = ({ matrixData }) => {
   const handleRunCode = async () => {
     setIsAnimating(true);
     const workspace = Blockly.getMainWorkspace();
-    await updateMatrixAsync(workspace, matrix, setMatrix, key, setKey, complete, setComplete, position, setPosition, completedLevel);
+    await updateMatrixAsync(workspace, matrix, setMatrix, key, setKey, complete, setComplete, position, setPosition, completedLevel, incompleteLevel);
     setIsAnimating(false);
-    if(!complete){
-      setOpenPopupFail(true)
-    }
   };
   useEffect(() => {
     if (key) {
@@ -345,6 +342,9 @@ const SubmitLevel: React.FC<SubmitProps> = ({ matrixData }) => {
       console.error('Error when upload level:', error);
       return false;
     }
+  }
+  const incompleteLevel = () => {
+    setOpenPopupFail(true);
   }
   const handleClosePopupFail = () => {
     setOpenPopupFail(false);

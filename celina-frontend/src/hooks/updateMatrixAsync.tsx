@@ -2,7 +2,7 @@ import Blockly from 'blockly';
 import { javascriptGenerator } from 'blockly/javascript';
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-const updateMatrixAsync = async (workspace: Blockly.Workspace, matrix: number[][], setMatrix: React.Dispatch<React.SetStateAction<number[][]>>, key: boolean, setKey:React.Dispatch<React.SetStateAction<boolean>>, complete: boolean, setComplete: React.Dispatch<React.SetStateAction<boolean>>, position: {x: number, y:number}, setPosition: React.Dispatch<React.SetStateAction<{x: number, y:number}>>, completedLevel: () => void) => {
+const updateMatrixAsync = async (workspace: Blockly.Workspace, matrix: number[][], setMatrix: React.Dispatch<React.SetStateAction<number[][]>>, key: boolean, setKey:React.Dispatch<React.SetStateAction<boolean>>, complete: boolean, setComplete: React.Dispatch<React.SetStateAction<boolean>>, position: {x: number, y:number}, setPosition: React.Dispatch<React.SetStateAction<{x: number, y:number}>>, completedLevel: () => void, incompleteLevel: () => void) => {
     const code = javascriptGenerator.workspaceToCode(workspace);
     
     const findPlayer = (matrix: number[][]): [number, number] | null => {
@@ -36,6 +36,9 @@ const updateMatrixAsync = async (workspace: Blockly.Workspace, matrix: number[][
 
     try {
         await runCode(code);
+        if(!complete){
+            incompleteLevel()
+        }
     } catch (error) {
         console.error("Error executing Blockly code:", error);
     }
