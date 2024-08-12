@@ -1,13 +1,10 @@
 .submit-page {
     display: flex;
     flex-direction: column;
-    width: 1280px;
-    scale: 0.9;
+    height: 100vh;
     .submit-component {
-        position: absolute;
-        top: 50%;
-        left: 1;
-        transform: translateY(-50%);
+        flex: 1;  /* Permite que o PlayLevel ocupe o espaço restante */
+        display: flex;
     }
 
     .btn_logout {
@@ -17,10 +14,10 @@
         height: 40px;
         background-color: #4E4E4E;
         border-radius: 63px;
-        color: white; 
+        color: white;
         border: none;
-        cursor: pointer; 
-        margin: 10px; 
+        cursor: pointer;
+        margin: 10px;
     }
 
     .btn_logout:hover {

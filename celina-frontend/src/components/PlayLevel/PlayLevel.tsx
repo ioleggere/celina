@@ -294,6 +294,9 @@ const PlayLevel: React.FC<PlayLevelProps> = ({ matrixData }) => {
     const workspace = Blockly.getMainWorkspace();
     await updateMatrixAsync(workspace, matrix, setMatrix, key, setKey, complete, setComplete, position, setPosition, completedLevel);
     setIsAnimating(false);
+    if(!complete){
+      setOpenPopupFail(true);
+    }
   };
 
   useEffect(() => {
@@ -312,11 +315,19 @@ const PlayLevel: React.FC<PlayLevelProps> = ({ matrixData }) => {
 
   }
   const [openPopup, setOpenPopup] = useState(false);
+  const [openPopupFail, setOpenPopupFail] = useState(false);
+
   const completedLevel = () => {
     setOpenPopup(true);
   }
+
   const handleClosePopup = () => {
     setOpenPopup(false);
+    navigate('/CelinaRoom');
+  };
+
+  const handleClosePopupFail = () => {
+    setOpenPopupFail(false);
     navigate('/CelinaRoom');
   };
 
@@ -390,6 +401,24 @@ const PlayLevel: React.FC<PlayLevelProps> = ({ matrixData }) => {
         <DialogActions>
           <Button onClick={handleClosePopup} color="primary">
             Eba
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={openPopupFail}
+        onClose={handleClosePopupFail}
+        aria-labelledby="Level Incompleto"
+        aria-describedby="Poxa."
+      >
+        <DialogTitle id="complete-popup">{"Level Incompleto"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="complete-description">
+            Não conseguiu completar!
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClosePopupFail} color="primary">
+            Poxa.
           </Button>
         </DialogActions>
       </Dialog>

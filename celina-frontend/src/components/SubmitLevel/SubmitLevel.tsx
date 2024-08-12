@@ -331,38 +331,41 @@ const SubmitLevel: React.FC<SubmitProps> = ({ matrixData }) => {
   }
   const uploadLevel = async (name: string, matrix: number[][]) => {
     try {
-        const data = await api.addLevel(name, matrix)
-        if (data) {
-            console.log(data)
-            return true;
-        }
-        return false;
+      const data = await api.addLevel(name, matrix)
+      if (data) {
+        console.log(data)
+        return true;
+      }
+      return false;
     } catch (error) {
-        console.error('Error when upload level:', error);
-        return false;
+      console.error('Error when upload level:', error);
+      return false;
     }
-}
+  }
   return (
     <div className="submiter">
-      <div className='matrix-container-submiter'>
-        <div className='matrix-submiter' style={{ transform: `scale(${scale})`, transformOrigin: 'top left', width: matrix[0].length * 30, height: matrix.length * 30 }}>
-          <Matriz matriz={matrix} onCellClick={handleCellClick} />
+      <div className='box-matrix'>
+        <div className='matrix-container-submiter'>
+          <div className='matrix-submiter' style={{ transform: `scale(${scale})`, transformOrigin: 'top left', width: matrix[0].length * 30, height: matrix.length * 30 }}>
+            <Matriz matriz={matrix} onCellClick={handleCellClick} />
+          </div>
         </div>
+        <Slider
+          value={scale * 10}
+          className='sliderzoom'
+          onChange={(event, newValue) => {
+            if (typeof newValue === 'number') {
+              setScale(newValue / 10);
+            }
+          }}
+          aria-labelledby="continuous-slider"
+          step={0.1}
+          min={1}
+          max={10}
+          valueLabelDisplay="auto"
+        />
       </div>
-      <Slider
-        value={scale * 10}
-        className='sliderzoom'
-        onChange={(event, newValue) => {
-          if (typeof newValue === 'number') {
-            setScale(newValue / 10);
-          }
-        }}
-        aria-labelledby="continuous-slider"
-        step={0.1}
-        min={1}
-        max={10}
-        valueLabelDisplay="auto"
-      />
+
       <div className='blockly-container'>
         <BlocklyWorkspace
           toolboxConfiguration={TOOL_BOX_CATEGORIES}
