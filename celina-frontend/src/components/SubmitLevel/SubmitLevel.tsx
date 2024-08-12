@@ -298,6 +298,9 @@ const SubmitLevel: React.FC<SubmitProps> = ({ matrixData }) => {
     const workspace = Blockly.getMainWorkspace();
     await updateMatrixAsync(workspace, matrix, setMatrix, key, setKey, complete, setComplete, position, setPosition, completedLevel);
     setIsAnimating(false);
+    if(!complete){
+      setOpenPopupFail(true)
+    }
   };
   useEffect(() => {
     if (key) {
@@ -315,6 +318,7 @@ const SubmitLevel: React.FC<SubmitProps> = ({ matrixData }) => {
 
   }
   const [openPopup, setOpenPopup] = useState(false);
+  const [openPopupFail, setOpenPopupFail] = useState(false);
   const completedLevel = () => {
     setOpenPopup(true);
   }
@@ -342,6 +346,10 @@ const SubmitLevel: React.FC<SubmitProps> = ({ matrixData }) => {
       return false;
     }
   }
+  const handleClosePopupFail = () => {
+    setOpenPopupFail(false);
+    navigate('/CelinaRoom');
+  };
   return (
     <div className="submiter">
       <div className='box-matrix'>
@@ -423,6 +431,24 @@ const SubmitLevel: React.FC<SubmitProps> = ({ matrixData }) => {
           </Button>
           <Button onClick={handleUploadLevel} color="primary" autoFocus>
             Upar
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={openPopupFail}
+        onClose={handleClosePopupFail}
+        aria-labelledby="Level Incompleto"
+        aria-describedby="Poxa."
+      >
+        <DialogTitle id="complete-popup">{"Level Incompleto"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="complete-description">
+            Não conseguiu completar!
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClosePopupFail} color="primary">
+            Poxa.
           </Button>
         </DialogActions>
       </Dialog>
