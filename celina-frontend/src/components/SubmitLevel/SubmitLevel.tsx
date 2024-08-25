@@ -129,7 +129,7 @@ const TOOL_BOX_CATEGORIES = `
   </category>
   <category name="Variables" colour="#A65C81" custom="VARIABLE"></category>
   <category name="Functions" colour="#9A5CA6" custom="PROCEDURE"></category>
-  <category name="Custom Blocks" colour="#FF6680">
+  <category name="Move Player" colour="#FF6680">
     <block type="andar"></block>
   </category>
 </xml>
